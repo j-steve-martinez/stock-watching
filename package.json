@@ -1,0 +1,19 @@
+{
+  "name": "stock-watching",
+  "version": "1.0.0",
+  "description": "Real time stock graph",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/j-steve-martinez/stock-watching.git"
+  },
+  "author": "J. Steve Martinez",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/j-steve-martinez/stock-watching/issues"
+  },
+  "homepage": "https://github.com/j-steve-martinez/stock-watching#readme"
+}
