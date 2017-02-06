@@ -1,21 +1,13 @@
 body {
   background-color: #f6f6f0; }
 
-textarea {
-  width: 200px;
-  height: 120px;
-  border: 3px solid #cccccc;
-  background-color: #d9edf7;
-  padding: 5px;
-  font-family: Tahoma, sans-serif; }
-
-#chart {
-  width: 400px;
-  height: 300px; }
+form {
+  padding-bottom: 5px; }
 
 .jumbotron {
   background-color: #d9edf7;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
+  margin-top: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
   text-align: center; }
@@ -32,6 +24,13 @@ textarea {
 
 .container-fluid {
   margin-bottom: 5px; }
+
+.chart-container {
+  padding-bottom: 20px; }
+
+.btn {
+  margin-top: 5px;
+  margin-right: 5px; }
 
 .navbar-default {
   background-color: #337AB7;
