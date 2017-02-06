@@ -57,74 +57,10 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(32);
 	var rd3 = __webpack_require__(178);
-	// var Markit = require('../controller/Markit.js');
-	// console.log(Markit);
+	// var yahooFinance = require('yahoo-finance');
+
 	// https://api.robinhood.com/quotes/historicals/FB/?interval=10minute&span=day
-	function BP(props) {
-	  var polls = props.polls;
-	  var cb = props.cb;
-	  var links = polls.map(function (poll) {
-	    return React.createElement(
-	      'div',
-	      { className: 'panel-body bg-warning', key: poll._id.toString() },
-	      React.createElement(
-	        NavLink,
-	        {
-	          to: '/api/poll/' + poll._id,
-	          cb: cb },
-	        poll.name
-	      )
-	    );
-	  });
-	  return React.createElement(
-	    'span',
-	    null,
-	    links
-	  );
-	}
 
-	function NewPollResults(props) {
-	  var items = props.items;
-	  var title = items[0];
-	  var poll = items.filter(function (value, key) {
-	    if (key > 0) {
-	      return value;
-	    }
-	  });
-	  var listItems = poll.map(function (value, key) {
-	    return React.createElement(
-	      'li',
-	      { key: key.toString() },
-	      value
-	    );
-	  });
-	  return React.createElement(
-	    'div',
-	    null,
-	    React.createElement(
-	      'h4',
-	      null,
-	      title
-	    ),
-	    React.createElement(
-	      'ul',
-	      null,
-	      listItems
-	    )
-	  );
-	}
-
-	function getQueryVariable(variable) {
-	  var query = window.location.search.substring(1);
-	  var vars = query.split('&');
-	  for (var i = 0; i < vars.length; i++) {
-	    var pair = vars[i].split('=');
-	    if (decodeURIComponent(pair[0]) == variable) {
-	      return decodeURIComponent(pair[1]);
-	    }
-	  }
-	  // console.log('Query variable %s not found', variable);
-	}
 
 	function getColors(num) {
 	  // console.log('getting colors');
@@ -380,19 +316,95 @@
 
 	var GetQuote = React.createClass({
 	  displayName: 'GetQuote',
-	  getData: function getData(symbol) {
-	    var base = 'https://api.robinhood.com/quotes/historicals/';
-	    var interval = '/?interval=10minute&span=day';
+	  getData: function getData(symbols) {
+	    console.log('Main getData data');
+	    console.log(symbols);
+
+	    var url,
+	        data = {},
+	        header = {};
+
+	    data = { symbols: symbols };
+	    url = window.location.origin + '/api/quotes';
+	    header.url = url;
+	    header.method = 'POST';
+	    header.data = JSON.stringify(data);
+	    header.contentType = "application/json";
+	    header.dataType = 'json';
+	    console.log(header);
+	    $.ajax(header).then(function (results) {
+	      console.log('Main getQuote done');
+	      console.log(results);
+	    });
+	    // var now = new Date();
+	    // console.log(now);
+	    // yahooFinance.historical({
+	    //   symbol: SYMBOL,
+	    //   from: START_DATE,
+	    //   to: END_DATE
+	    // }, function (err, quotes) {
+
+	    // });
+	    /*
+	    [
+	      {
+	        date: Thu Nov 07 2013 00:00:00 GMT-0500 (EST),
+	        open: 45.1,
+	        high: 50.09,
+	        low: 44,
+	        close: 44.9,
+	        volume: 117701700,
+	        adjClose: 44.9,
+	        symbol: 'TWTR'
+	      },
+	      ...
+	      {
+	        date: Thu Nov 14 2013 00:00:00 GMT-0500 (EST),
+	        open: 42.34,
+	        high: 45.67,
+	        low: 42.24,
+	        close: 44.69,
+	        volume: 11090800,
+	        adjClose: 44.69,
+	        symbol: 'TWTR'
+	      }
+	    ]
+	    */
+	    // var base = 'https://api.robinhood.com/quotes/historicals/';
+	    // var interval = '/?interval=10minute&span=day';
 	    // var urls = [];
-	    var url = base + symbol + interval;
+	    // var url = base + symbol + interval;
 
-	    console.log(url);
-	    var quote = {
-	      "quote": "https://api.robinhood.com/quotes/MS/", "symbol": "MS", "interval": "10minute", "span": "day", "bounds": "regular", "previous_close_price": "42.1300", "open_price": "43.0900", "open_time": "2017-02-03T14:30:00Z", "instrument": "https://api.robinhood.com/instruments/75f435f0-0d44-44a4-bd14-ac2eba5badea/", "historicals": [{ "begins_at": "2017-02-03T14:30:00Z", "open_price": "43.0900", "close_price": "43.0500", "high_price": "43.1800", "low_price": "42.9200", "volume": 205255, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T14:40:00Z", "open_price": "43.0450", "close_price": "43.2601", "high_price": "43.2800", "low_price": "43.0100", "volume": 496418, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T14:50:00Z", "open_price": "43.2650", "close_price": "43.5200", "high_price": "43.5200", "low_price": "43.2650", "volume": 257254, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:00:00Z", "open_price": "43.5100", "close_price": "43.5700", "high_price": "43.6600", "low_price": "43.4400", "volume": 154462, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:10:00Z", "open_price": "43.5700", "close_price": "43.5100", "high_price": "43.6100", "low_price": "43.4300", "volume": 114364, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:20:00Z", "open_price": "43.5200", "close_price": "43.7000", "high_price": "43.7400", "low_price": "43.4993", "volume": 144117, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:30:00Z", "open_price": "43.7000", "close_price": "43.7300", "high_price": "43.7453", "low_price": "43.6029", "volume": 93458, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:40:00Z", "open_price": "43.7400", "close_price": "43.8200", "high_price": "43.8200", "low_price": "43.7100", "volume": 112242, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:50:00Z", "open_price": "43.8200", "close_price": "43.9100", "high_price": "43.9300", "low_price": "43.7550", "volume": 159319, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16 :00:00Z", "open_price": "43.9100", "close_price": "44.1334", "high_price": "44.1400", "low_price": "43.8850", "volume": 259733, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:10:00Z", "open_price": "44.1400", "close_price": "44.1550", "high_price": "44.2400", "low_price": "44.1000", "volume": 222836, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:20:00Z", "open_price": "44.1550", "close_price": "44.1500", "high_price": "44.1800", "low_price": "43.9950", "volume": 201216, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:30:00Z", "open_price": "44.1500", "close_price": "44.3450", "high_price": "44.3750", "low_price": "44.1400", "volume": 339468, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16 :40:00Z", "open_price": "44.3450", "close_price": "44.2650", "high_price": "44.3500", "low_price": "44.1600", "volume": 286679, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:50:00Z", "open_price": "44.2600", "close_price": "44.2750", "high_price": "44.2950", "low_price": "44.2100", "volume": 101145, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:00:00Z", "open_price": "44.2850", "close_price": "44.3800", "high_price": "44.4137", "low_price": "44.2700", "volume": 141608, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:10:00Z", "open_price": "44.3800", "close_price": "44.4100", "high_price": "44.4600", "low_price": "44.3250", "volume": 138610, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17 :20:00Z", "open_price": "44.4100", "close_price": "44.2600", "high_price": "44.4150", "low_price": "44.2350", "volume": 170131, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:30:00Z", "open_price": "44.2700", "close_price": "44.3150", "high_price": "44.3400", "low_price": "44.2650", "volume": 110492, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:40:00Z", "open_price": "44.3150", "close_price": "44.3400", "high_price": "44.3484", "low_price": "44.3000", "volume": 66772, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:50:00Z", "open_price": "44.3400", "close_price": "44.4400", "high_price": "44.4450", "low_price": "44.3300", "volume": 130393, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18 :00:00Z", "open_price": "44.4422", "close_price": "44.4189", "high_price": "44.4700", "low_price": "44.3750", "volume": 124831, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:10:00Z", "open_price": "44.4196", "close_price": "44.4900", "high_price": "44.5400", "low_price": "44.4100", "volume": 160903, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:20:00Z", "open_price": "44.4900", "close_price": "44.4300", "high_price": "44.5600", "low_price": "44.4100", "volume": 131311, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:30:00Z", "open_price": "44.4350", "close_price": "44.4900", "high_price": "44.5150", "low_price": "44.4300", "volume": 72421, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18 :40:00Z", "open_price": "44.4862", "close_price": "44.5136", "high_price": "44.5163", "low_price": "44.4500", "volume": 66857, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:50:00Z", "open_price": "44.5100", "close_price": "44.4929", "high_price": "44.5450", "low_price": "44.4700", "volume": 120009, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:00:00Z", "open_price": "44.4950", "close_price": "44.5000", "high_price": "44.5500", "low_price": "44.4900", "volume": 67163, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:10:00Z", "open_price": "44.5050", "close_price": "44.3900", "high_price": "44.5150", "low_price": "44.3810", "volume": 114827, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19 :20:00Z", "open_price": "44.3850", "close_price": "44.3600", "high_price": "44.4150", "low_price": "44.3000", "volume": 132923, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:30:00Z", "open_price": "44.3550", "close_price": "44.4500", "high_price": "44.4850", "low_price": "44.3399", "volume": 152656, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:40:00Z", "open_price": "44.4600", "close_price": "44.4711", "high_price": "44.5100", "low_price": "44.4350", "volume": 53679, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:50:00Z", "open_price": "44.4700", "close_price": "44.5000", "high_price": "44.5000", "low_price": "44.4200", "volume": 57609, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20 :00:00Z", "open_price": "44.5000", "close_price": "44.4750", "high_price": "44.5300", "low_price": "44.4345", "volume": 110797, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:10:00Z", "open_price": "44.4730", "close_price": "44.4900", "high_price": "44.5000", "low_price": "44.4350", "volume": 95394, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:20:00Z", "open_price": "44.4938", "close_price": "44.4700", "high_price": "44.5000", "low_price": "44.4600", "volume": 92586, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:30:00Z", "open_price": "44.4650", "close_price": "44.5564", "high_price": "44.5890", "low_price": "44.4500", "volume": 193732, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20 :40:00Z", "open_price": "44.5550", "close_price": "44.5400", "high_price": "44.6000", "low_price": "44.5100", "volume": 340050, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:50:00Z", "open_price": "44.5410", "close_price": "44.4400", "high_price": "44.5500", "low_price": "44.4300", "volume": 485053, "session": "reg", "interpolated": false }]
-	    };
-
-	    console.log(quote);
-	    this.props.cb('tickers', quote);
+	    // console.log(url);
+	    // var quote = {
+	    // "quote": "https://api.robinhood.com/quotes/MS/", "symbol": "MS", "interval": "10minute", "span": "day", "bounds": "regular", "previous_close_price": "42.1300", "open_price": "43.0900", "open_time": "2017-02-03T14:30:00Z", "instrument": "https://api.robinhood.com/instruments/75f435f0-0d44-44a4-bd14-ac2eba5badea/", "historicals": [{ "begins_at": "2017-02-03T14:30:00Z", "open_price": "43.0900", "close_price": "43.0500", "high_price": "43.1800", "low_price": "42.9200", "volume": 205255, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T14:40:00Z", "open_price": "43.0450", "close_price": "43.2601", "high_price": "43.2800", "low_price": "43.0100", "volume": 496418, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T14:50:00Z", "open_price": "43.2650", "close_price": "43.5200", "high_price": "43.5200", "low_price": "43.2650", "volume": 257254, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:00:00Z", "open_price": "43.5100", "close_price": "43.5700", "high_price": "43.6600", "low_price": "43.4400", "volume": 154462, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:10:00Z", "open_price": "43.5700", "close_price": "43.5100", "high_price": "43.6100", "low_price": "43.4300", "volume": 114364, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:20:00Z", "open_price": "43.5200", "close_price": "43.7000", "high_price": "43.7400", "low_price": "43.4993", "volume": 144117, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:30:00Z", "open_price": "43.7000", "close_price": "43.7300", "high_price": "43.7453", "low_price": "43.6029", "volume": 93458, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:40:00Z", "open_price": "43.7400", "close_price": "43.8200", "high_price": "43.8200", "low_price": "43.7100", "volume": 112242, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T15:50:00Z", "open_price": "43.8200", "close_price": "43.9100", "high_price": "43.9300", "low_price": "43.7550", "volume": 159319, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16 :00:00Z", "open_price": "43.9100", "close_price": "44.1334", "high_price": "44.1400", "low_price": "43.8850", "volume": 259733, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:10:00Z", "open_price": "44.1400", "close_price": "44.1550", "high_price": "44.2400", "low_price": "44.1000", "volume": 222836, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:20:00Z", "open_price": "44.1550", "close_price": "44.1500", "high_price": "44.1800", "low_price": "43.9950", "volume": 201216, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:30:00Z", "open_price": "44.1500", "close_price": "44.3450", "high_price": "44.3750", "low_price": "44.1400", "volume": 339468, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16 :40:00Z", "open_price": "44.3450", "close_price": "44.2650", "high_price": "44.3500", "low_price": "44.1600", "volume": 286679, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T16:50:00Z", "open_price": "44.2600", "close_price": "44.2750", "high_price": "44.2950", "low_price": "44.2100", "volume": 101145, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:00:00Z", "open_price": "44.2850", "close_price": "44.3800", "high_price": "44.4137", "low_price": "44.2700", "volume": 141608, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:10:00Z", "open_price": "44.3800", "close_price": "44.4100", "high_price": "44.4600", "low_price": "44.3250", "volume": 138610, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17 :20:00Z", "open_price": "44.4100", "close_price": "44.2600", "high_price": "44.4150", "low_price": "44.2350", "volume": 170131, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:30:00Z", "open_price": "44.2700", "close_price": "44.3150", "high_price": "44.3400", "low_price": "44.2650", "volume": 110492, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:40:00Z", "open_price": "44.3150", "close_price": "44.3400", "high_price": "44.3484", "low_price": "44.3000", "volume": 66772, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T17:50:00Z", "open_price": "44.3400", "close_price": "44.4400", "high_price": "44.4450", "low_price": "44.3300", "volume": 130393, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18 :00:00Z", "open_price": "44.4422", "close_price": "44.4189", "high_price": "44.4700", "low_price": "44.3750", "volume": 124831, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:10:00Z", "open_price": "44.4196", "close_price": "44.4900", "high_price": "44.5400", "low_price": "44.4100", "volume": 160903, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:20:00Z", "open_price": "44.4900", "close_price": "44.4300", "high_price": "44.5600", "low_price": "44.4100", "volume": 131311, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:30:00Z", "open_price": "44.4350", "close_price": "44.4900", "high_price": "44.5150", "low_price": "44.4300", "volume": 72421, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18 :40:00Z", "open_price": "44.4862", "close_price": "44.5136", "high_price": "44.5163", "low_price": "44.4500", "volume": 66857, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T18:50:00Z", "open_price": "44.5100", "close_price": "44.4929", "high_price": "44.5450", "low_price": "44.4700", "volume": 120009, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:00:00Z", "open_price": "44.4950", "close_price": "44.5000", "high_price": "44.5500", "low_price": "44.4900", "volume": 67163, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:10:00Z", "open_price": "44.5050", "close_price": "44.3900", "high_price": "44.5150", "low_price": "44.3810", "volume": 114827, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19 :20:00Z", "open_price": "44.3850", "close_price": "44.3600", "high_price": "44.4150", "low_price": "44.3000", "volume": 132923, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:30:00Z", "open_price": "44.3550", "close_price": "44.4500", "high_price": "44.4850", "low_price": "44.3399", "volume": 152656, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:40:00Z", "open_price": "44.4600", "close_price": "44.4711", "high_price": "44.5100", "low_price": "44.4350", "volume": 53679, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T19:50:00Z", "open_price": "44.4700", "close_price": "44.5000", "high_price": "44.5000", "low_price": "44.4200", "volume": 57609, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20 :00:00Z", "open_price": "44.5000", "close_price": "44.4750", "high_price": "44.5300", "low_price": "44.4345", "volume": 110797, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:10:00Z", "open_price": "44.4730", "close_price": "44.4900", "high_price": "44.5000", "low_price": "44.4350", "volume": 95394, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:20:00Z", "open_price": "44.4938", "close_price": "44.4700", "high_price": "44.5000", "low_price": "44.4600", "volume": 92586, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:30:00Z", "open_price": "44.4650", "close_price": "44.5564", "high_price": "44.5890", "low_price": "44.4500", "volume": 193732, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20 :40:00Z", "open_price": "44.5550", "close_price": "44.5400", "high_price": "44.6000", "low_price": "44.5100", "volume": 340050, "session": "reg", "interpolated": false }, { "begins_at": "2017-02-03T20:50:00Z", "open_price": "44.5410", "close_price": "44.4400", "high_price": "44.5500", "low_price": "44.4300", "volume": 485053, "session": "reg", "interpolated": false }]
+	    // };
+	    /**
+	     * Format the data to display in chart
+	     */
+	    // var historicals, hist, symbol, start, end, low, high, data;
+	    // historicals = quote.historicals;
+	    // start = historicals[0].begins_at;
+	    // end = historicals[historicals.length - 1].begins_at;
+	    // // low = historicals.sort()[0]
+	    // symbol = quote.symbol;
+	    // hist = historicals.map((value)=>{
+	    //   return value.close_price;
+	    // });
+	    // data = {
+	    //   symbol : symbol,
+	    //   hist : hist,
+	    //   start : start,
+	    //   end : end
+	    // };
+	    // console.log(quote);
+	    // console.log(historicals);
+	    // console.log(hist.sort());
+	    // console.log(symbol);
+	    // console.log(start);
+	    // console.log(end);
+	    // console.log(data);
+	    // this.props.cb('tickers', quote);
 	    /**
 	     * Uncomment later use mock data for now
 	     */
@@ -422,7 +434,8 @@
 	    console.log(this.props.symbol);
 	    if (this.props.symbol !== '') {
 	      console.log('mock get data');
-	      this.getData(this.props.symbol);
+	      // var symbol = [this.props.symbol];
+	      this.getData([this.props.symbol]);
 	    }
 	    return null;
 	  }

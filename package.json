@@ -31,6 +31,7 @@
     "express-ws": "2.0.0",
     "http": "0.0.0",
     "if-env": "1.0.0",
+    "moment": "2.17.1",
     "mongoose": "4.8.1",
     "passport": "0.3.2",
     "passport-github": "1.1.0",
@@ -39,7 +40,9 @@
     "rd3": "0.7.4",
     "react": "15.4.2",
     "react-dom": "15.4.2",
-    "ws": "2.0.1"
+    "react-stockcharts": "0.6.1",
+    "ws": "2.0.1",
+    "yahoo-finance": "0.2.16"
   },
   "devDependencies": {
     "babel-core": "6.21.0",

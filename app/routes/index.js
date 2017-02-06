@@ -2,6 +2,7 @@
 
 var path = process.cwd();
 var ClickHandler = require(path + '/app/controllers/clickHandler.server.js');
+var Quotes = require(path + '/app/controllers/Quotes.js');
 var index = path + '/public/index.html';
 
 module.exports = function (app, passport, primus) {
@@ -19,43 +20,14 @@ module.exports = function (app, passport, primus) {
 	// }
 
 	var clickHandler = new ClickHandler();
-	clickHandler.addDefault();
+	var quotes = new Quotes();
+	// clickHandler.addDefault();
 
 	app.route('/')
 		.get(function (req, res) {
 			// console.log(req.params);
 			res.sendFile(index);
 		});
-
-	// app.route('/logout')
-	// 	.get(function (req, res) {
-	// 		req.logout();
-	// 		res.redirect('/');
-	// 	});
-
-	// get user info
-	// app.route('/api/:id')
-	// 	.get(isLoggedIn, function (req, res) {
-	// 		res.json(req.user)
-	// 	});
-
-	// app.route('/auth/github')
-	// 	.get(passport.authenticate('github'));
-
-	// app.route('/auth/github/callback')
-	// 	.get(passport.authenticate('github', {
-	// 		successRedirect: '/',
-	// 		failureRedirect: '/'
-	// 	}));
-
-	// app.route('/auth/twitter')
-	// 	.get(passport.authenticate('twitter'));
-
-	// app.route('/auth/twitter/callback')
-	// 	.get(passport.authenticate('twitter', {
-	// 		successRedirect: '/',
-	// 		failureRedirect: '/'
-	// 	}));
 
 	// console.log(primus);
 	primus.on('connection', function connection(spark) {
@@ -77,12 +49,11 @@ module.exports = function (app, passport, primus) {
 
 		});
 	});
-	// add, get, edit, delete the user poll data
-	// must be authenticated
-	// app.route('/api/:id/:poll')
-	// 	.get(isLoggedIn, clickHandler.getPolls)
-	// 	.put(isLoggedIn, clickHandler.editPoll)
-	// 	.post(isLoggedIn, clickHandler.addPoll)
-	// 	.delete(isLoggedIn, clickHandler.delPoll)
+
+	/**
+	 * Get the stock symbol data
+	 */
+	app.route('/api/quotes')
+		.post(quotes.history)
 
 };
