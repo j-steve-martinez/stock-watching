@@ -123,47 +123,6 @@
 	       */
 	      this.optimusPrime(symbol);
 
-	      // /**
-	      //  * Add or delete the symbols from the list
-	      //  */
-	      // if (symbols.indexOf(symbol) === -1 && symbol !== '') {
-	      //   /**
-	      //    * Add the symbol to the list
-	      //    */
-	      //   symbols.push(symbol);
-
-	      //   /**
-	      //    * Notify the server to update all clients
-	      //    */
-	      //   message = 'add:' + symbol;
-	      //   this.state.primus.write(message);
-
-	      //   /**
-	      //    * Update the app
-	      //    */
-	      //   this.setState({ symbols: symbols, symbol: symbol });
-
-	      // } else if (symbols.indexOf(symbol) >= 0 && symbol !== '') {
-	      //   console.log('Attempting delete of symbol ' + symbol);
-	      //   /**
-	      //    * Remove the symbol from the list
-	      //    */
-	      //   var symbols = symbols.filter(valeu => {
-	      //     return value != symbol;
-	      //   });
-
-	      //   /**
-	      //    * Notify the server to update all clients
-	      //    */
-	      //   message = 'del:' + symbol;
-	      //   this.state.primus.write(message);
-
-	      //   /**
-	      //    * Update the app
-	      //    */
-	      //   this.setState({ symbols: symbols, symbol: '' })
-	      // }
-
 	      /**
 	       * Clear the current entry in the form;
 	       */
@@ -230,6 +189,7 @@
 	       * symbol
 	       * symbols
 	       * tickers
+	       * del
 	       */
 	      switch (type) {
 	        case 'symbols':
@@ -243,29 +203,6 @@
 	          break;
 	        case 'del':
 	          this.optimusPrime(data);
-	          // console.log();
-	          // var symbol = data;
-	          // if (this.state.symbols.indexOf(symbol) >= 0 && symbol !== '') {
-	          //   console.log('Attempting delete of symbol ' + data);
-	          //   /**
-	          //    * Remove the symbol from the list
-	          //    */
-
-	          //   var symbols = this.state.symbols.filter(value => {
-	          //     return value != symbol;
-	          //   });
-
-	          //   /**
-	          //    * Notify the server to update all clients
-	          //    */
-	          //   var message = 'del:' + symbol;
-	          //   this.state.primus.write(message);
-
-	          //   /**
-	          //    * Update the app
-	          //    */
-	          //   this.setState({ symbols: symbols, symbol: '' })
-	          // }
 	          break;
 	        default:
 	          console.log('Something went wrong');
