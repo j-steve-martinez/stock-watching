@@ -104,11 +104,6 @@
 	          symbol,
 
 	      /**
-	       * Get the symbol list
-	       */
-	      symbols = this.state.symbols,
-
-	      /**
 	       * Get a reference to the html input
 	       */
 	      echo = document.getElementById('echo');
