@@ -30,6 +30,7 @@ class Main extends React.Component {
     console.log('Main init');
     this.callBack = this.callBack.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.optimusPrime = this.optimusPrime.bind(this);
   }
   handleClick(e) {
     console.log('handleClick')
@@ -49,6 +50,66 @@ class Main extends React.Component {
      * Get the value from the form
      */
     symbol = echo.value.toUpperCase();
+
+    /**
+     * Update the clients
+     */
+    this.optimusPrime(symbol);
+
+    // /**
+    //  * Add or delete the symbols from the list
+    //  */
+    // if (symbols.indexOf(symbol) === -1 && symbol !== '') {
+    //   /**
+    //    * Add the symbol to the list
+    //    */
+    //   symbols.push(symbol);
+
+    //   /**
+    //    * Notify the server to update all clients
+    //    */
+    //   message = 'add:' + symbol;
+    //   this.state.primus.write(message);
+
+    //   /**
+    //    * Update the app
+    //    */
+    //   this.setState({ symbols: symbols, symbol: symbol });
+
+    // } else if (symbols.indexOf(symbol) >= 0 && symbol !== '') {
+    //   console.log('Attempting delete of symbol ' + symbol);
+    //   /**
+    //    * Remove the symbol from the list
+    //    */
+    //   var symbols = symbols.filter(valeu => {
+    //     return value != symbol;
+    //   });
+
+    //   /**
+    //    * Notify the server to update all clients
+    //    */
+    //   message = 'del:' + symbol;
+    //   this.state.primus.write(message);
+
+    //   /**
+    //    * Update the app
+    //    */
+    //   this.setState({ symbols: symbols, symbol: '' })
+    // }
+
+    /**
+     * Clear the current entry in the form;
+     */
+    echo.value = '';
+  }
+
+  optimusPrime(symbol) {
+    var message;
+ 
+    /**
+     * Get the symbols list
+     */
+    var symbols = this.state.symbols;
 
     /**
      * Add or delete the symbols from the list
@@ -75,7 +136,7 @@ class Main extends React.Component {
       /**
        * Remove the symbol from the list
        */
-      var symbols = symbols.filter(valeu => {
+      symbols = symbols.filter(value => {
         return value != symbol;
       });
 
@@ -88,13 +149,10 @@ class Main extends React.Component {
       /**
        * Update the app
        */
-      this.setState({ symbols: symbols, symbol: symbol })
+      this.setState({ symbols: symbols, symbol: '' })
     }
-    /**
-     * Clear the current entry in the form;
-     */
-    echo.value = '';
   }
+
   callBack(type, data) {
     console.log('Main callBack called');
     console.log('type ' + type);
@@ -116,29 +174,30 @@ class Main extends React.Component {
         this.setState({ tickers: data, symbol: '' })
         break;
       case 'del':
+        this.optimusPrime(data);
         // console.log();
-        var symbol = data;
-        if (this.state.symbols.indexOf(symbol) >= 0 && symbol !== '') {
-          console.log('Attempting delete of symbol ' + data);
-          /**
-           * Remove the symbol from the list
-           */
+        // var symbol = data;
+        // if (this.state.symbols.indexOf(symbol) >= 0 && symbol !== '') {
+        //   console.log('Attempting delete of symbol ' + data);
+        //   /**
+        //    * Remove the symbol from the list
+        //    */
 
-          var symbols = this.state.symbols.filter(value => {
-            return value != symbol;
-          });
+        //   var symbols = this.state.symbols.filter(value => {
+        //     return value != symbol;
+        //   });
 
-          /**
-           * Notify the server to update all clients
-           */
-          var message = 'del:' + symbol;
-          this.state.primus.write(message);
+        //   /**
+        //    * Notify the server to update all clients
+        //    */
+        //   var message = 'del:' + symbol;
+        //   this.state.primus.write(message);
 
-          /**
-           * Update the app
-           */
-          this.setState({ symbols: symbols, symbol: '' })
-        }
+        //   /**
+        //    * Update the app
+        //    */
+        //   this.setState({ symbols: symbols, symbol: '' })
+        // }
         break;
       default:
         console.log('Something went wrong');
@@ -148,6 +207,7 @@ class Main extends React.Component {
     }
 
   }
+
   componentDidMount() {
     // console.log('Main componentDidMount');
 
@@ -159,6 +219,7 @@ class Main extends React.Component {
     //   output.value += data + '\n';
     // });
   }
+
   componentWillMount() {
     console.log('Main componentWillMount');
     /**
@@ -177,6 +238,7 @@ class Main extends React.Component {
     this.setState({ primus, symbols: symbols, symbol: "" });
 
   }
+
   render() {
     console.log('Main this.state');
     console.log(this.state);
