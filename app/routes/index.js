@@ -7,21 +7,8 @@ var index = path + '/public/index.html';
 
 module.exports = function (app, passport, primus) {
 
-	// function isLoggedIn(req, res, next) {
-	// 	console.log('starting isAuthenticated');
-	// 	if (req.isAuthenticated()) {
-	// 		console.log('isAuthenticated true');
-	// 		return next();
-	// 	} else {
-	// 		console.log('isAuthenticated false');
-	// 		console.log(req.url);
-	// 		res.json({ id: false });
-	// 	}
-	// }
-
 	var clickHandler = new ClickHandler();
 	var quotes = new Quotes();
-	// clickHandler.addDefault();
 
 	app.route('/')
 		.get(function (req, res) {
@@ -34,24 +21,36 @@ module.exports = function (app, passport, primus) {
 		console.log('new connection ' + spark.id);
 		// primus.write('data');
 
+		/**
+		 * Wait for all data to be received from the client
+		 */
 		spark.on('data', function received(data) {
 			console.log(spark.id, 'received message:', data);
 			/**
-			 * NOTE: check to see if symbol is in database
+			 * Check to see if Stock is in database
 			 *  or add to database then run the for loop on primus
 			 */
+			var dataArr = data.split(':');
+			if (dataArr[0] === 'add') {
+				clickHandler.addStock(dataArr[1]);
+			} else	if (dataArr[0] === 'del') {
+				clickHandler.delStock(dataArr[1]);
+			}
+
+			/**
+			 * Send the message to all clients
+			 */
 			primus.forEach(function (spark, id, connections) {
-				// if (spark.query.foo !== 'bar') return;
+
 				console.log('sending ' + data + ' to ' + spark.id);
 
 				spark.write(data);
 			});
-
 		});
 	});
 
 	/**
-	 * Get the stock symbol data
+	 * Get the stock Stock data
 	 */
 	app.route('/api/quotes')
 		.post(quotes.history)

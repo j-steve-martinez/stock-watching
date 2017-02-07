@@ -1,30 +1,25 @@
 'use strict';
 
-var Users = require('../models/users.js');
-var Poll = require('../models/polls.js');
+// var Users = require('../models/users.js');
+var Stock = require('../models/stocks.js');
 
-function ClickHandler () {
-	this.getAllPolls = function(req, res){
-		Poll.find().exec((err, data) => {
-			if (err) throw err;
-			res.json(data);
-		});
-	}
+function ClickHandler() {
+	this.isSaved = false;
 
-	this.addDefault = ()=>{
-		Poll.find({}, (err, data) => {
+	this.addDefault = () => {
+		Stock.find({}, (err, data) => {
 			if (err) throw err;
 			if (data.length === 0) {
-				// add default poll
+				// add default Stock
 				console.log('add default');
-				var poll = new Poll({
-					name : "Do You Like This App?",
-					uid : 'default',
-					list : [
-						{key : 'Yes', value : 0},
-						{key : 'No', value : 0}]
+				var Stock = new Stock({
+					name: "Do You Like This App?",
+					uid: 'default',
+					list: [
+						{ key: 'Yes', value: 0 },
+						{ key: 'No', value: 0 }]
 				});
-				poll.save((err, data) => {
+				Stock.save((err, data) => {
 					if (err) throw err;
 					console.log(data);
 				})
@@ -32,113 +27,55 @@ function ClickHandler () {
 		});
 	}
 
-	// get all user polls
-	this.getPolls = function(req, res){
-		var id = req.user.id;
-		Poll
+	// get all Stocks
+	this.getStocks = function (req, res) {
+		Stock
 			.find()
 			.exec((err, data) => {
 				if (err) throw err;
-				// console.log('getUserPolls');
-				var polls = data.filter(poll => {
-					if (poll.uid.toString() === id) {
-						return poll;
-					}
+				res.json(Stocks);
+			});
+	}
+
+	this.addStock = (symbol) => {
+		var isSaved = false;
+		Stock.find({ name: symbol }, (err, symbols) => {
+			if (err) throw err;
+
+			if (symbols.length) {
+				console.log('symbol already exists');
+				// res.send({isOk: false});
+				// return {isOk: false};
+				// this.isSaved = false;
+
+			} else {
+				var newStock = new Stock({ name: symbol });
+
+				// Saving it to the database.
+				newStock.save(function (err, data) {
+					if (err) { throw err }
+					console.log('data saved');
+					// return {isOk : true};
+					isSaved = true;
+					// res.send({isOk : true})
+					// this.isSaved = true;
 				});
-				res.json(polls);
-			});
-	}
-
-	this.addPoll = (req, res) => {
-		req.on('data', function(body) {
-
-			var data = JSON.parse(body);
-
-			Poll.find({name : data.name, uid : data.uid}, (err, poll) => {
-				if (err) throw err;
-
-				if (poll.length) {
-					// console.log('sending json');
-					res.json({isExists : true, isSaved : false});
-				} else {
-					var newPoll = new Poll(data);
-
-					// Saving it to the database.
-					newPoll.save(function (err, data) {
-						if (err) {
-							// console.log ('Error on save!');
-							res.json({isExists : false, isSaved : false});
-						}
-						// console.log('data saved');
-						res.json({isExists : false, isSaved : true, poll : data});
-					});
-				}
-			});
+			}
 		});
+		
 	}
 
-	this.getPoll = (req, res) => {
-		// console.log('getPoll');
-		Poll
-			.findOne({'_id': req.params.id})
-			.exec((err, poll) => {
-				if (err) throw err;
-				res.json(poll)
-			});
-	}
-
-	this.takePoll = (req, res) => {
-		// console.log('editPoll');
-		// console.log(req.params.id);
-		req.on('data', function(body) {
-
-			var data = JSON.parse(body);
-
-			Poll
-				.findOneAndUpdate({
-					'_id': data.id,
-					'name' : data.name,
-					'list.key' : data.key
-				},
-					{ $inc : { 'list.$.value': 1 }},
-					// get the update poll
-					{ new: true }
-				)
-				.exec((err, poll) => {
-					if (err) throw err;
-					res.json(poll);
-				});
-		});
-	}
-
-	this.editPoll = (req, res) => {
-		// console.log('editPoll');
-		req.on('data', body => {
-
-			var data = JSON.parse(body);
-
-			Poll
-				.update({
-					'_id': req.params.poll,
-					'name' : data.name
-				},
-					{ $push : { list: { key: data.key, value : data.value}}}
-				)
-				.exec((err, poll) => {
-					if (err) throw err;
-					res.json(poll);
-				});
-		});
-	}
-
-	this.delPoll = (req, res) => {
-		// console.log('del getPoll');
-		Poll
-		  .findByIdAndRemove(req.params.poll)
-			.exec((err, poll) => {
-				if (err) throw err;
-				res.json(poll)
-			});
+	this.delStock = (symbol) => {
+		// console.log('del getStock');
+		Stock
+			.findOneAndRemove({name : symbol}, (err, doc) => {
+				console.log('removed');
+				console.log(doc);
+			})
+			// .exec((err, Stock) => {
+			// 	if (err) throw err;
+			// 	res.json(Stock)
+			// });
 	}
 
 }
