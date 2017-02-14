@@ -232,10 +232,10 @@ class Main extends React.Component {
     }
 
     if (this.state === null || this.state.historical.length === 0) {
-      console.log('setting chart to null');
+      // console.log('setting chart to null');
       chart = null;
     } else {
-      console.log('setting chart to LineAndScatterChart');
+      // console.log('setting chart to LineAndScatterChart');
       // chart = <MyChart historical={this.state.historical} />;
       var ratio = 1;
       var width = 600;

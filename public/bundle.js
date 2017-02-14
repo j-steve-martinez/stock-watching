@@ -309,10 +309,10 @@
 	      }
 
 	      if (this.state === null || this.state.historical.length === 0) {
-	        console.log('setting chart to null');
+	        // console.log('setting chart to null');
 	        chart = null;
 	      } else {
-	        console.log('setting chart to LineAndScatterChart');
+	        // console.log('setting chart to LineAndScatterChart');
 	        // chart = <MyChart historical={this.state.historical} />;
 	        var ratio = 1;
 	        var width = 600;
@@ -2972,25 +2972,77 @@
 				    parseTime = (0, _d3TimeFormat.timeParse)("%Y-%m-%dT%H:%M:%S.%LZ"),
 				    date,
 				    keys,
-				    chart;
-				// keys = data.keys();
+				    chart,
+				    hist = [];
+
+				data = data[0];
+				// console.log('data');
+				// console.log(data);
+				keys = Object.keys(data);
 				// console.log("KEYS: ");
 				// console.log(keys);
-				// data[0].forEach((d, i) => {
-				// 	date = parseTime(d.date);
-				// 	d.date = date;
-				// });
+				var len = data[keys[0]].length;
+				// console.log(len);
+				for (var i = 0; i < len; i++) {
+					var day = {};
+					// console.log("The number is " + i);
+					keys.forEach(function (name) {
+						// console.log(name);
+						// console.log(data[name][i]);
 
-				console.log('data');
-				console.log(data);
-				chart = _react2.default.createElement(
+						/**
+	      * Set the symbol close
+	      */
+						day[name] = +data[name][i].close;
+
+						/**
+	      * Set the high for the y axis
+	      */
+						if (day.high === undefined || day.high < data[name][i].high) {
+							day.high = data[name][i].high;
+						}
+
+						/**
+	      * Set the low for the y axis
+	      */
+						if (day.low === undefined || day.low > data[name][i].low) {
+							day.low = data[name][i].low;
+						}
+
+						/**
+	      * Set the close for testing
+	      */
+						if (day.close === undefined) {
+							day.close = +data[name][i].close;
+						}
+
+						/**
+	      * Set the date for the x axis ticks
+	      */
+						if (day.date === undefined) {
+							day.date = parseTime(data[name][i].date);
+						}
+					});
+					// console.log(day.date);
+					// console.log(day);
+					hist.push(day);
+				}
+				console.log(hist);
+				// 		{/*<LineSeries
+				// 	yAccessor={d => d.close}
+				// 	strokeDasharray="LongDash" />
+				// <ScatterSeries
+				// 	yAccessor={d => d.close}
+				// 	marker={CircleMarker}
+				// 	markerProps={{ r: 3 }} />*/}
+				return _react2.default.createElement(
 					_reactStockcharts.ChartCanvas,
 					{ ratio: ratio, width: width, height: 400,
 						margin: { left: 70, right: 70, top: 20, bottom: 30 },
 						type: type,
 						pointsPerPxThreshold: 1,
 						seriesName: "MSFT",
-						data: data,
+						data: hist,
 						xAccessor: function xAccessor(d) {
 							return d.date;
 						}, xScaleProvider: discontinuousTimeScaleProvider,
@@ -3007,7 +3059,7 @@
 							orient: "right"
 							// tickInterval={5}
 							// tickValues={[40, 60]}
-							, ticks: 5
+							, ticks: 20
 						}),
 						_react2.default.createElement(MouseCoordinateX, {
 							at: "bottom",
@@ -3019,20 +3071,29 @@
 							displayFormat: (0, _d3Format.format)(".2f") }),
 						_react2.default.createElement(LineSeries, {
 							yAccessor: function yAccessor(d) {
-								return d.close;
+								return d.GOOG;
 							},
 							strokeDasharray: "LongDash" }),
 						_react2.default.createElement(ScatterSeries, {
 							yAccessor: function yAccessor(d) {
-								return d.close;
+								return d.GOOG;
 							},
 							marker: CircleMarker,
 							markerProps: { r: 3 } }),
-						_react2.default.createElement(OHLCTooltip, { forChart: 1, origin: [-40, 0] })
+						_react2.default.createElement(LineSeries, {
+							yAccessor: function yAccessor(d) {
+								return d.MSFT;
+							},
+							strokeDasharray: "LongDash" }),
+						_react2.default.createElement(ScatterSeries, {
+							yAccessor: function yAccessor(d) {
+								return d.MSFT;
+							},
+							marker: CircleMarker,
+							markerProps: { r: 3 } })
 					),
 					_react2.default.createElement(CrossHairCursor, null)
 				);
-				return null;
 			}
 		}]);
 

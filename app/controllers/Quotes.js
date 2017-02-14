@@ -16,7 +16,7 @@ function Quotes() {
             yahooFinance.historical({
                 symbols: data.symbols,
                 from: '2016-01-01',
-                to: '2016-12-31',
+                to: '2016-01-31',
             }).then(result => {
                 // if (err) { throw err; }
                 // console.log(result);
