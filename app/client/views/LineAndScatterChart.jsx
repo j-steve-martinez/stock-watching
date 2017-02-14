@@ -2,7 +2,7 @@
 
 import React from "react";
 import { format } from "d3-format";
-import { timeFormat } from "d3-time-format";
+import { timeFormat, timeParse } from "d3-time-format";
 
 import { ChartCanvas, Chart, series, scale, coordinates, tooltip, axes, helper } from "react-stockcharts";
 
@@ -17,21 +17,27 @@ var { fitWidth, TypeChooser } = helper;
 
 class LineAndScatterChart extends React.Component {
 	render() {
-		console.log('LineAndScatterChart render');
-		console.log(data);
-		var { data, type, width, ratio } = this.props;
+		// console.log('LineAndScatterChart render');
+		var { data, type, width, ratio } = this.props,
+		 parseTime = timeParse("%Y-%m-%dT%H:%M:%S.%LZ"),
+		 date;
+		data.forEach((d, i) => {
+			date = parseTime(d.date);
+			d.date = date;
+		});
+		// console.log(data);
 		return (
 			<ChartCanvas ratio={ratio} width={width} height={400}
-					margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
-					type={type}
-					pointsPerPxThreshold={1}
-					seriesName="MSFT"
-					data={data}
-					xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
-					xExtents={[new Date(2012, 0, 1), new Date(2012, 2, 2)]}>
+				margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
+				type={type}
+				pointsPerPxThreshold={1}
+				seriesName="MSFT"
+				data={data}
+				xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
+				xExtents={[new Date(2016, 0, 1), new Date(2016, 3, 1)]}>
 				<Chart id={1}
-						yExtents={d => [d.high, d.low, d.AAPLClose, d.GEClose]}>
-					<XAxis axisAt="bottom" orient="bottom"/>
+					yExtents={d => [d.high, d.low]}>
+					<XAxis axisAt="bottom" orient="bottom" />
 					<YAxis
 						axisAt="right"
 						orient="right"
@@ -49,28 +55,13 @@ class LineAndScatterChart extends React.Component {
 						displayFormat={format(".2f")} />
 
 					<LineSeries
-						yAccessor={d => d.AAPLClose}
-						stroke="#ff7f0e"
-						strokeDasharray="Dot" />
-					<ScatterSeries
-						yAccessor={d => d.AAPLClose}
-						marker={SquareMarker}
-						markerProps={{ width: 6, stroke: "#ff7f0e", fill: "#ff7f0e" }} />
-					<LineSeries
-						yAccessor={d => d.GEClose}
-						stroke="#2ca02c" />
-					<ScatterSeries
-						yAccessor={d => d.GEClose}
-						marker={TriangleMarker}
-						markerProps={{ width: 8, stroke: "#2ca02c", fill: "#2ca02c" }} />
-					<LineSeries
 						yAccessor={d => d.close}
 						strokeDasharray="LongDash" />
 					<ScatterSeries
 						yAccessor={d => d.close}
 						marker={CircleMarker}
 						markerProps={{ r: 3 }} />
-					<OHLCTooltip forChart={1} origin={[-40, 0]}/>
+					<OHLCTooltip forChart={1} origin={[-40, 0]} />
 				</Chart>
 
 				<CrossHairCursor />

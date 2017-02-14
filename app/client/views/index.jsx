@@ -1,12 +1,12 @@
 'use strict'
 var React = require('react');
 var ReactDOM = require('react-dom');
-var d3 = require("d3/build/d3");
-import { format } from "d3-format";
-import { timeFormat } from "d3-time-format";
-import { ChartCanvas, Chart, series, scale, coordinates, tooltip, axes, helper } from "react-stockcharts";
+// var d3 = require("d3/build/d3");
+// import { format } from "d3-format";
+// import { timeFormat } from "d3-time-format";
+// import { ChartCanvas, Chart, series, scale, coordinates, tooltip, axes, helper } from "react-stockcharts";
 // var rd3 = require('rd3');
-// import LineAndScatterChart from './LineAndScatterChart.jsx';
+import LineAndScatterChart from './LineAndScatterChart.jsx';
 // import { ChartCanvas, Chart, series } from "react-stockcharts";
 // const { LineSeries, ScatterSeries, CircleMarker, SquareMarker, TriangleMarker } = series;
 // var yahooFinance = require('yahoo-finance');
@@ -39,7 +39,7 @@ function getColors(num) {
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    console.log('Main init');
+    // console.log('Main init');
     this.callBack = this.callBack.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.optimusPrime = this.optimusPrime.bind(this);
@@ -47,7 +47,7 @@ class Main extends React.Component {
     // this.state = { symbols: [], symbol: "" };
   }
   handleClick(e) {
-    console.log('handleClick')
+  // console.log('handleClick')
     e.preventDefault();
 
     var message, symbol,
@@ -73,7 +73,7 @@ class Main extends React.Component {
   }
 
   optimusPrime(symbol) {
-    console.log('optimusPrime called');
+  // console.log('optimusPrime called');
     var message;
 
     /**
@@ -99,11 +99,11 @@ class Main extends React.Component {
       header.data = JSON.stringify(data);
       header.contentType = "application/json";
       header.dataType = 'json';
-      console.log(header);
+    // console.log(header);
       $.ajax(header).then(results => {
 
-        console.log('Main getQuote done');
-        console.log(results);
+      // console.log('Main getQuote done');
+      // console.log(results);
         if (results[0].name === null) {
           /**
            * Not a valid symbol: notify the user;
@@ -133,7 +133,7 @@ class Main extends React.Component {
 
 
     } else if (symbols.indexOf(symbol) >= 0 && symbol !== '') {
-      console.log('Attempting delete of symbol ' + symbol);
+    // console.log('Attempting delete of symbol ' + symbol);
       /**
        * Remove the symbol from the list
        */
@@ -155,9 +155,9 @@ class Main extends React.Component {
   }
 
   callBack(type, data) {
-    console.log('Main callBack called');
-    console.log('type ' + type);
-    console.log(data);
+  // console.log('Main callBack called');
+  // console.log('type ' + type);
+  // console.log(data);
     /**
      * Possible type values:
      * historical
@@ -177,15 +177,15 @@ class Main extends React.Component {
         this.optimusPrime(data);
         break;
       default:
-        console.log('Something went wrong');
-        console.log(type);
-        console.log(data);
+      // console.log('Something went wrong');
+      // console.log(type);
+      // console.log(data);
         break;
     }
   }
 
   componentDidMount() {
-    console.log('Main componentDidMount');
+  // console.log('Main componentDidMount');
     /**
      * Get the symbols from the server
      */
@@ -195,8 +195,8 @@ class Main extends React.Component {
       method: 'GET',
       dataType: 'json'
     }).then(list => {
-      console.log('Got Symbol List');
-      console.log(list);
+    // console.log('Got Symbol List');
+    // console.log(list);
       var symbols = list.map(value => {
         return value.name;
       });
@@ -208,7 +208,7 @@ class Main extends React.Component {
   }
 
   componentWillMount() {
-    console.log('Main componentWillMount');
+  // console.log('Main componentWillMount');
 
     /**
      * Tell primus to create a new connect to the current domain/port/protocol
@@ -218,8 +218,8 @@ class Main extends React.Component {
   }
 
   render() {
-    console.log('Main this.state');
-    console.log(this.state);
+  // console.log('Main this.state');
+  // console.log(this.state);
 
     var quotes, stocks, chart;
 
@@ -232,12 +232,12 @@ class Main extends React.Component {
     }
 
     if (this.state === null || this.state.historical.length === 0) {
-      console.log('setting chart to null');
+    // console.log('setting chart to null');
       chart = null;
     } else {
-      console.log('setting chart to LineAndScatterChart');
+    // console.log('setting chart to LineAndScatterChart');
       // chart = <MyChart historical={this.state.historical} />;
-      var ratio = 1.5;
+      var ratio = 1;
       var width = 600;
       var type = "svg"
       chart = <LineAndScatterChart data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
@@ -274,16 +274,16 @@ class Main extends React.Component {
 const ListStocks = React.createClass({
   handleClick(e) {
     e.preventDefault();
-    console.log('handleClick');
-    console.log('del:' + e.target.id);
+  // console.log('handleClick');
+  // console.log('del:' + e.target.id);
     // var symbols = this.props.symbols.filter((value, key) => {
     //   return value !== e.target.id;
     // });
     this.props.cb('del', e.target.id);
   },
   render() {
-    console.log('ListStocks');
-    console.log(this.props);
+  // console.log('ListStocks');
+  // console.log(this.props);
     // var list = null;
     var list = this.props.symbols.map((value, key) => {
       return (
@@ -300,7 +300,7 @@ const ListStocks = React.createClass({
       )
     });
 
-    console.log(list);
+  // console.log(list);
     return (
       <div className="list-group">
         {list}
@@ -309,90 +309,10 @@ const ListStocks = React.createClass({
   }
 });
 
-var { BarSeries, LineSeries, AreaSeries, ScatterSeries, CircleMarker, SquareMarker, TriangleMarker } = series;
-var { discontinuousTimeScaleProvider } = scale;
-
-var { CrossHairCursor, MouseCoordinateX, MouseCoordinateY } = coordinates;
-
-var { OHLCTooltip } = tooltip;
-var { XAxis, YAxis } = axes;
-var { fitWidth, TypeChooser } = helper;
-// var { timeParse } = timeFormat;
-var LineAndScatterChart = React.createClass({
-  render() {
-    console.log('LineAndScatterChart render');
-    console.log(this.props);
-    // console.log(timeFormat);
-    var { data, type, width, ratio } = this.props;
-    data.forEach((d, i) => {
-      var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
-      var date = parseTime(d.date);
-      // console.log(date);
-      d.date = date;
-      d.open = +d.open;
-      d.high = +d.high;
-      d.low = +d.low;
-      d.close = +d.close;
-      d.volume = +d.volume;
-    });
-    console.log(data);
-    var chart = (<ChartCanvas ratio={ratio} width={width} height={400}
-      margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
-      type={type}
-      pointsPerPxThreshold={1}
-      seriesName="TWTR"
-      data={data}
-      xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
-      xExtents={[new Date(2016, 0, 1), new Date(2016, 0, 31)]}>
-      <Chart id={1}
-        yExtents={d => [d.high, d.low, d.high, d.low]}>
-        <XAxis axisAt="bottom" orient="bottom" />
-        <YAxis
-          axisAt="right"
-          orient="right"
-          // tickInterval={5}
-          // tickValues={[40, 60]}
-          ticks={5} />
-        <MouseCoordinateX
-          at="bottom"
-          orient="bottom"
-          displayFormat={timeFormat("%Y-%m-%d")} />
-        <MouseCoordinateY
-          at="right"
-          orient="right"
-          displayFormat={format(".2f")} />
-        <LineSeries
-          yAccessor={d => d.close}
-          strokeDasharray="LongDash" />
-        <ScatterSeries
-          yAccessor={d => d.close}
-          marker={CircleMarker}
-          markerProps={{ r: 3 }} />
-        <OHLCTooltip forChart={1} origin={[-40, 0]} />
-      </Chart>
-
-      <CrossHairCursor />
-    </ChartCanvas>);
-    return (chart);
-  }
-});
-
-LineAndScatterChart.propTypes = {
-  data: React.PropTypes.array.isRequired,
-  width: React.PropTypes.number.isRequired,
-  ratio: React.PropTypes.number.isRequired,
-  type: React.PropTypes.oneOf(["svg", "hybrid"]).isRequired,
-};
-
-LineAndScatterChart.defaultProps = {
-  type: "svg",
-};
-LineAndScatterChart = fitWidth(LineAndScatterChart);
-
 const GetQuote = React.createClass({
   getData(symbols) {
-    console.log('GetQuote getData');
-    console.log(symbols);
+  // console.log('GetQuote getData');
+  // console.log(symbols);
 
     var url,
       data = {},
@@ -405,11 +325,11 @@ const GetQuote = React.createClass({
     header.data = JSON.stringify(data);
     header.contentType = "application/json";
     header.dataType = 'json';
-    console.log(header);
+  // console.log(header);
     $.ajax(header).then(results => {
 
-      console.log('GetQuote got historical');
-      console.log(results);
+    // console.log('GetQuote got historical');
+    // console.log(results);
       this.props.cb('historical', results);
 
     });
@@ -451,12 +371,12 @@ const GetQuote = React.createClass({
     //   method: 'GET'//,
     //   dataType : 'json'
     // }).then(quote => {
-    //   console.log('Got Quote');
-    //   console.log(quote);
+    // console.log('Got Quote');
+    // console.log(quote);
     // })
   },
   componentWillMount() {
-    console.log('getQuote componentWillMount');
+  // console.log('getQuote componentWillMount');
     /**
      * TODO: For test only use the for loop when finished
      */
@@ -465,13 +385,13 @@ const GetQuote = React.createClass({
 
   },
   render() {
-    console.log('GetQuote render');
-    console.log('symbols');
-    console.log(this.props.symbols);
-    console.log('symbol');
-    console.log(this.props.symbol);
+  // console.log('GetQuote render');
+  // console.log('symbols');
+  // console.log(this.props.symbols);
+  // console.log('symbol');
+  // console.log(this.props.symbol);
     if (this.props.symbol !== '') {
-      console.log('mock get data');
+    // console.log('mock get data');
       // var symbol = [this.props.symbol];
       this.getData([this.props.symbol]);
     }

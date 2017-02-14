@@ -5,3 +5,4 @@ node_modules/
 .languagebabel
 .vscode/
 public/css/main.js
+npm-debug.log
