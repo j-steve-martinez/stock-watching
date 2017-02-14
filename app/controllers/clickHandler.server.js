@@ -7,24 +7,21 @@ function ClickHandler() {
 	this.isSaved = false;
 
 	this.addDefault = () => {
-		Stock.find({}, (err, data) => {
-			if (err) throw err;
-			if (data.length === 0) {
-				// add default Stock
-				console.log('add default');
-				var Stock = new Stock({
-					name: "Do You Like This App?",
-					uid: 'default',
-					list: [
-						{ key: 'Yes', value: 0 },
-						{ key: 'No', value: 0 }]
-				});
-				Stock.save((err, data) => {
-					if (err) throw err;
-					console.log(data);
-				})
-			}
-		});
+		Stock
+			.find({}, (err, data) => {
+				if (err) throw err;
+				if (data.length === 0) {
+					// add default Stock
+					console.log('add default: Twitter');
+					var stock = new Stock({
+						name: "TWTR"
+					});
+					stock.save((err, data) => {
+						if (err) throw err;
+						console.log(data);
+					})
+				}
+			});
 	}
 
 	// get all Stocks
@@ -33,7 +30,7 @@ function ClickHandler() {
 			.find()
 			.exec((err, data) => {
 				if (err) throw err;
-				res.json(Stocks);
+				res.json(data);
 			});
 	}
 
@@ -62,20 +59,20 @@ function ClickHandler() {
 				});
 			}
 		});
-		
+
 	}
 
 	this.delStock = (symbol) => {
 		// console.log('del getStock');
 		Stock
-			.findOneAndRemove({name : symbol}, (err, doc) => {
+			.findOneAndRemove({ name: symbol }, (err, doc) => {
 				console.log('removed');
 				console.log(doc);
 			})
-			// .exec((err, Stock) => {
-			// 	if (err) throw err;
-			// 	res.json(Stock)
-			// });
+		// .exec((err, Stock) => {
+		// 	if (err) throw err;
+		// 	res.json(Stock)
+		// });
 	}
 
 }

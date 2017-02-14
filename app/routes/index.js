@@ -8,6 +8,7 @@ var index = path + '/public/index.html';
 module.exports = function (app, passport, primus) {
 
 	var clickHandler = new ClickHandler();
+	clickHandler.addDefault();
 	var quotes = new Quotes();
 
 	app.route('/')
@@ -53,6 +54,8 @@ module.exports = function (app, passport, primus) {
 	 * Get the stock Stock data
 	 */
 	app.route('/api/quotes')
+		.get(clickHandler.getStocks)
+		.put(quotes.validate)
 		.post(quotes.history)
 
 };

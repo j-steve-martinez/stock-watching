@@ -1,7 +1,14 @@
 'use strict'
 var React = require('react');
 var ReactDOM = require('react-dom');
-var rd3 = require('rd3');
+var d3 = require("d3/build/d3");
+import { format } from "d3-format";
+import { timeFormat } from "d3-time-format";
+import { ChartCanvas, Chart, series, scale, coordinates, tooltip, axes, helper } from "react-stockcharts";
+// var rd3 = require('rd3');
+// import LineAndScatterChart from './LineAndScatterChart.jsx';
+// import { ChartCanvas, Chart, series } from "react-stockcharts";
+// const { LineSeries, ScatterSeries, CircleMarker, SquareMarker, TriangleMarker } = series;
 // var yahooFinance = require('yahoo-finance');
 
 // https://api.robinhood.com/quotes/historicals/FB/?interval=10minute&span=day
@@ -31,6 +38,8 @@ class Main extends React.Component {
     this.callBack = this.callBack.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.optimusPrime = this.optimusPrime.bind(this);
+
+    // this.state = { symbols: [], symbol: "" };
   }
   handleClick(e) {
     console.log('handleClick')
@@ -59,6 +68,7 @@ class Main extends React.Component {
   }
 
   optimusPrime(symbol) {
+    console.log('optimusPrime called');
     var message;
 
     /**
@@ -71,20 +81,51 @@ class Main extends React.Component {
      */
     if (symbols.indexOf(symbol) === -1 && symbol !== '') {
       /**
-       * Add the symbol to the list
+       * Validate the symbol
        */
-      symbols.push(symbol);
+      var url,
+        data = {},
+        header = {};
 
-      /**
-       * Notify the server to update all clients
-       */
-      message = 'add:' + symbol;
-      this.state.primus.write(message);
+      data = { symbols: [symbol] };
+      url = window.location.origin + '/api/quotes';
+      header.url = url;
+      header.method = 'PUT';
+      header.data = JSON.stringify(data);
+      header.contentType = "application/json";
+      header.dataType = 'json';
+      console.log(header);
+      $.ajax(header).then(results => {
 
-      /**
-       * Update the app
-       */
-      this.setState({ symbols: symbols, symbol: symbol });
+        console.log('Main getQuote done');
+        console.log(results);
+        if (results[0].name === null) {
+          /**
+           * Not a valid symbol: notify the user;
+           */
+          this.setState({ message: 'Not A Valid Symbol' });
+        } else {
+
+          /**
+           * Add the symbol to the list
+           */
+          symbols.push(symbol);
+
+          /**
+           * Notify the server to update all clients
+           */
+          message = 'add:' + symbol;
+          this.state.primus.write(message);
+
+          /**
+           * Update the app
+           */
+          this.setState({ symbols: symbols, symbol: symbol });
+        }
+
+      });
+
+
 
     } else if (symbols.indexOf(symbol) >= 0 && symbol !== '') {
       console.log('Attempting delete of symbol ' + symbol);
@@ -114,20 +155,18 @@ class Main extends React.Component {
     console.log(data);
     /**
      * Possible type values:
-     * symbol
-     * symbols
-     * tickers
+     * historical
      * del
      */
     switch (type) {
-      case 'symbols':
-        this.setState({ symbols: data, symbol: '' })
-        break;
-      case 'symbol':
-        this.setState({ symbol: data })
-        break;
-      case 'tickers':
-        this.setState({ tickers: data, symbol: '' })
+      // case 'symbols':
+      //   this.setState({ symbols: data, symbol: '' })
+      //   break;
+      // case 'symbol':
+      //   this.setState({ symbol: data })
+      //   break;
+      case 'historical':
+        this.setState({ historical: data, symbol: '' })
         break;
       case 'del':
         this.optimusPrime(data);
@@ -141,42 +180,65 @@ class Main extends React.Component {
   }
 
   componentDidMount() {
-    // console.log('Main componentDidMount');
-
+    console.log('Main componentDidMount');
     /**
-     * Listen for incoming data and log it in our textarea.
+     * Get the symbols from the server
      */
-    // var output = document.getElementById('output');
-    // this.state.primus.on('data', function received(data) {
-    //   output.value += data + '\n';
-    // });
+    var url = window.location.origin + '/api/quotes';
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType: 'json'
+    }).then(list => {
+      console.log('Got Symbol List');
+      console.log(list);
+      var symbols = list.map(value => {
+        return value.name;
+      });
+      var primus = new Primus();
+      // this.setState({ primus });
+      this.setState({ symbols, symbol: "", primus: primus, historical: [] });
+      //  this.setState({ symbols: symbols, symbol: "" });
+    });
   }
 
   componentWillMount() {
     console.log('Main componentWillMount');
+
     /**
      * Tell primus to create a new connect to the current domain/port/protocol
-    */
-    var primus = new Primus();
-
-    /**
-     * Get the symbols from the server
      */
-
-    /**
-     * This is a mockup will be replaced later with a ajax call
-     */
-    var symbols = ['FB', 'GOOG', 'AAPL'];
-    this.setState({ primus, symbols: symbols, symbol: "" });
-
+    // var primus = new Primus();
+    // this.setState({ primus });
   }
 
   render() {
     console.log('Main this.state');
     console.log(this.state);
-    console.log(this.props);
-    var colors = getColors(5);
-    console.log(colors);
+
+    var quotes, stocks, chart;
+
+    if (this.state === null || this.state.symbols.length === 0) {
+      quotes = null;
+      stocks = null;
+    } else {
+      quotes = <GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />;
+      stocks = <ListStocks symbols={this.state.symbols} cb={this.callBack} />;
+    }
+
+    if (this.state === null || this.state.historical.length === 0) {
+      console.log('setting chart to null');
+      chart = null;
+    } else {
+      console.log('setting chart to LineAndScatterChart');
+      // chart = <MyChart historical={this.state.historical} />;
+      var ratio = 2;
+      var width = 500;
+      var type = "svg"
+      chart = <LineAndScatterChart data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
+      // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
+    }
+
     return (
       <div className="container">
         <div className="jumbotron">
@@ -187,15 +249,17 @@ class Main extends React.Component {
           </div>
         </div>
         <div>
+          {/*<GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />*/}
+          {quotes}
           <form>
             <input type="text" id="echo" placeholder="Enter a Stock Symbol" />
             <button type="submit" className='btn btn-success btn-sm' onClick={this.handleClick}>Enter</button>
           </form>
-          <ListStocks symbols={this.state.symbols} cb={this.callBack} />
-          <GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />
+          {/*<ListStocks symbols={this.state.symbols} cb={this.callBack} />*/}
+          {stocks}
         </div>
         <div className='chart-container' >
-          <Chart />
+          {chart}
         </div>
       </div>
     )
@@ -210,12 +274,12 @@ const ListStocks = React.createClass({
     // var symbols = this.props.symbols.filter((value, key) => {
     //   return value !== e.target.id;
     // });
-    // this.props.cb('symbols', symbols);
     this.props.cb('del', e.target.id);
   },
   render() {
     console.log('ListStocks');
     console.log(this.props);
+    // var list = null;
     var list = this.props.symbols.map((value, key) => {
       return (
         <button
@@ -230,6 +294,7 @@ const ListStocks = React.createClass({
         </button>
       )
     });
+
     console.log(list);
     return (
       <div className="list-group">
@@ -239,8 +304,123 @@ const ListStocks = React.createClass({
   }
 });
 
-const Chart = React.createClass({
+var { BarSeries, LineSeries, AreaSeries, ScatterSeries, CircleMarker, SquareMarker, TriangleMarker } = series;
+var { discontinuousTimeScaleProvider } = scale;
+
+var { CrossHairCursor, MouseCoordinateX, MouseCoordinateY } = coordinates;
+
+var { OHLCTooltip } = tooltip;
+var { XAxis, YAxis } = axes;
+var { fitWidth, TypeChooser } = helper;
+// var { timeParse } = timeFormat;
+var LineAndScatterChart = React.createClass({
   render() {
+    console.log('LineAndScatterChart render');
+    console.log(this.props);
+    // console.log(timeFormat);
+    var { data, type, width, ratio } = this.props;
+    console.log(data);
+    // var test = data[0];
+    // var mydate = test.date;
+    // console.log('mydate');
+    // console.log("%Y-%m-%dT%H:%M:%S:%LZ");
+    // console.log(mydate);
+    // 2016-01-04T05:00:00.000Z
+    // console.log('parse:');
+    // var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
+    // console.log(dateFormat);
+    // var pd = parseTime(mydate);
+    // console.log(pd);
+    // var parseTime2 = d3.timeParse("%B %d, %Y");
+    // var t = parseTime2("June 30, 2015");
+    // console.log(parseTime2);
+    // console.log(t);
+    // console.log(dateFormat(test.date));
+    // d.getTime(test.date)
+    // console.log(d);
+    // console.log(test);
+    data.forEach((d, i) => {
+      var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
+      var date = parseTime(d.date);
+      // console.log(date);
+      d.date = date;
+      //console.log(d.date);
+    });
+    // console.log(data[0].date.getTime());
+    // console.log(data);
+    var chart = (<ChartCanvas ratio={ratio} width={width} height={400}
+      margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
+      type={type}
+      pointsPerPxThreshold={1}
+      seriesName="MSFT"
+      data={data}
+      xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
+      xExtents={[new Date(2012, 0, 1), new Date(2012, 2, 2)]}>
+      <Chart id={1}
+        yExtents={d => [d.high, d.low, d.AAPLClose, d.GEClose]}>
+        <XAxis axisAt="bottom" orient="bottom" />
+        <YAxis
+          axisAt="right"
+          orient="right"
+          // tickInterval={5}
+          // tickValues={[40, 60]}
+          ticks={5}
+        />
+        <MouseCoordinateX
+          at="bottom"
+          orient="bottom"
+          displayFormat={timeFormat("%Y-%m-%d")} />
+        <MouseCoordinateY
+          at="right"
+          orient="right"
+          displayFormat={format(".2f")} />
+
+        <LineSeries
+          yAccessor={d => d.AAPLClose}
+          stroke="#ff7f0e"
+          strokeDasharray="Dot" />
+        <ScatterSeries
+          yAccessor={d => d.AAPLClose}
+          marker={SquareMarker}
+          markerProps={{ width: 6, stroke: "#ff7f0e", fill: "#ff7f0e" }} />
+        <LineSeries
+          yAccessor={d => d.GEClose}
+          stroke="#2ca02c" />
+        <ScatterSeries
+          yAccessor={d => d.GEClose}
+          marker={TriangleMarker}
+          markerProps={{ width: 8, stroke: "#2ca02c", fill: "#2ca02c" }} />
+        <LineSeries
+          yAccessor={d => d.close}
+          strokeDasharray="LongDash" />
+        <ScatterSeries
+          yAccessor={d => d.close}
+          marker={CircleMarker}
+          markerProps={{ r: 3 }} />
+        <OHLCTooltip forChart={1} origin={[-40, 0]} />
+      </Chart>
+
+      <CrossHairCursor />
+    </ChartCanvas>);
+    return (chart);
+  }
+});
+
+// LineAndScatterChart.propTypes = {
+//   data: React.PropTypes.array.isRequired,
+//   width: React.PropTypes.number.isRequired,
+//   ratio: React.PropTypes.number.isRequired,
+//   type: React.PropTypes.oneOf(["svg", "hybrid"]).isRequired,
+// };
+
+// LineAndScatterChart.defaultProps = {
+//   type: "svg",
+// };
+// LineAndScatterChart = fitWidth(LineAndScatterChart);
+
+const MyChart = React.createClass({
+  render() {
+    console.log('Chart render');
     var LineChart = rd3.LineChart
     var lineData = [
       {
@@ -282,29 +462,31 @@ const Chart = React.createClass({
 
 const GetQuote = React.createClass({
   getData(symbols) {
-    console.log('Main getData data');
+    console.log('GetQuote getData');
     console.log(symbols);
 
-    // var url,
-    //   data = {},
-    //   header = {};
+    var url,
+      data = {},
+      header = {};
 
-    // data = { symbols: symbols };
-    // url = window.location.origin + '/api/quotes';
-    // header.url = url;
-    // header.method = 'POST';
-    // header.data = JSON.stringify(data);
-    // header.contentType = "application/json";
-    // header.dataType = 'json';
-    // console.log(header);
-    // $.ajax(header).then(results => {
-    //   console.log('Main getQuote done');
-    //   console.log(results);
+    data = { symbols: symbols };
+    url = window.location.origin + '/api/quotes';
+    header.url = url;
+    header.method = 'POST';
+    header.data = JSON.stringify(data);
+    header.contentType = "application/json";
+    header.dataType = 'json';
+    console.log(header);
+    $.ajax(header).then(results => {
 
-    // });
+      console.log('GetQuote got historical');
+      console.log(results);
+      this.props.cb('historical', results);
 
-    var test = getMockData();
-    console.log(test);
+    });
+
+    // var test = getMockData();
+    // console.log(test);
 
     /**
      * Format the data to display in chart
@@ -331,7 +513,7 @@ const GetQuote = React.createClass({
     // console.log(start);
     // console.log(end);
     // console.log(data);
-    // this.props.cb('tickers', quote);
+    // this.props.cb('historical', quote);
     /**
      * Uncomment later use mock data for now
      */
@@ -345,17 +527,19 @@ const GetQuote = React.createClass({
     // })
   },
   componentWillMount() {
+    console.log('getQuote componentWillMount');
     /**
      * TODO: For test only use the for loop when finished
      */
-    console.log('mock getting data');
 
     this.getData(this.props.symbols);
 
   },
   render() {
-    console.log('GetQuote');
+    console.log('GetQuote render');
+    console.log('symbols');
     console.log(this.props.symbols);
+    console.log('symbol');
     console.log(this.props.symbol);
     if (this.props.symbol !== '') {
       console.log('mock get data');
