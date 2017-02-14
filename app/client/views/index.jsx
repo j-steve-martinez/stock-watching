@@ -47,7 +47,7 @@ class Main extends React.Component {
     // this.state = { symbols: [], symbol: "" };
   }
   handleClick(e) {
-  // console.log('handleClick')
+    // console.log('handleClick')
     e.preventDefault();
 
     var message, symbol,
@@ -73,7 +73,7 @@ class Main extends React.Component {
   }
 
   optimusPrime(symbol) {
-  // console.log('optimusPrime called');
+    // console.log('optimusPrime called');
     var message;
 
     /**
@@ -99,11 +99,11 @@ class Main extends React.Component {
       header.data = JSON.stringify(data);
       header.contentType = "application/json";
       header.dataType = 'json';
-    // console.log(header);
+      // console.log(header);
       $.ajax(header).then(results => {
 
-      // console.log('Main getQuote done');
-      // console.log(results);
+        // console.log('Main getQuote done');
+        // console.log(results);
         if (results[0].name === null) {
           /**
            * Not a valid symbol: notify the user;
@@ -133,7 +133,7 @@ class Main extends React.Component {
 
 
     } else if (symbols.indexOf(symbol) >= 0 && symbol !== '') {
-    // console.log('Attempting delete of symbol ' + symbol);
+      // console.log('Attempting delete of symbol ' + symbol);
       /**
        * Remove the symbol from the list
        */
@@ -155,9 +155,9 @@ class Main extends React.Component {
   }
 
   callBack(type, data) {
-  // console.log('Main callBack called');
-  // console.log('type ' + type);
-  // console.log(data);
+    // console.log('Main callBack called');
+    // console.log('type ' + type);
+    // console.log(data);
     /**
      * Possible type values:
      * historical
@@ -177,15 +177,15 @@ class Main extends React.Component {
         this.optimusPrime(data);
         break;
       default:
-      // console.log('Something went wrong');
-      // console.log(type);
-      // console.log(data);
+        // console.log('Something went wrong');
+        // console.log(type);
+        // console.log(data);
         break;
     }
   }
 
   componentDidMount() {
-  // console.log('Main componentDidMount');
+    // console.log('Main componentDidMount');
     /**
      * Get the symbols from the server
      */
@@ -195,8 +195,8 @@ class Main extends React.Component {
       method: 'GET',
       dataType: 'json'
     }).then(list => {
-    // console.log('Got Symbol List');
-    // console.log(list);
+      // console.log('Got Symbol List');
+      // console.log(list);
       var symbols = list.map(value => {
         return value.name;
       });
@@ -208,7 +208,7 @@ class Main extends React.Component {
   }
 
   componentWillMount() {
-  // console.log('Main componentWillMount');
+    // console.log('Main componentWillMount');
 
     /**
      * Tell primus to create a new connect to the current domain/port/protocol
@@ -218,8 +218,8 @@ class Main extends React.Component {
   }
 
   render() {
-  // console.log('Main this.state');
-  // console.log(this.state);
+    console.log('Main this.state');
+    console.log(this.state);
 
     var quotes, stocks, chart;
 
@@ -232,15 +232,21 @@ class Main extends React.Component {
     }
 
     if (this.state === null || this.state.historical.length === 0) {
-    // console.log('setting chart to null');
+      console.log('setting chart to null');
       chart = null;
     } else {
-    // console.log('setting chart to LineAndScatterChart');
+      console.log('setting chart to LineAndScatterChart');
       // chart = <MyChart historical={this.state.historical} />;
       var ratio = 1;
       var width = 600;
       var type = "svg"
-      chart = <LineAndScatterChart data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
+      /**
+       * LineAndScatterChart only accepts an array
+       *  so put the object into and array
+       */
+      var data = [this.state.historical];
+      // chart = <LineAndScatterChart data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
+      chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
       // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
     }
 
@@ -274,16 +280,16 @@ class Main extends React.Component {
 const ListStocks = React.createClass({
   handleClick(e) {
     e.preventDefault();
-  // console.log('handleClick');
-  // console.log('del:' + e.target.id);
+    // console.log('handleClick');
+    // console.log('del:' + e.target.id);
     // var symbols = this.props.symbols.filter((value, key) => {
     //   return value !== e.target.id;
     // });
     this.props.cb('del', e.target.id);
   },
   render() {
-  // console.log('ListStocks');
-  // console.log(this.props);
+    // console.log('ListStocks');
+    // console.log(this.props);
     // var list = null;
     var list = this.props.symbols.map((value, key) => {
       return (
@@ -300,7 +306,7 @@ const ListStocks = React.createClass({
       )
     });
 
-  // console.log(list);
+    // console.log(list);
     return (
       <div className="list-group">
         {list}
@@ -311,8 +317,8 @@ const ListStocks = React.createClass({
 
 const GetQuote = React.createClass({
   getData(symbols) {
-  // console.log('GetQuote getData');
-  // console.log(symbols);
+    // console.log('GetQuote getData');
+    // console.log(symbols);
 
     var url,
       data = {},
@@ -325,11 +331,11 @@ const GetQuote = React.createClass({
     header.data = JSON.stringify(data);
     header.contentType = "application/json";
     header.dataType = 'json';
-  // console.log(header);
+    // console.log(header);
     $.ajax(header).then(results => {
 
-    // console.log('GetQuote got historical');
-    // console.log(results);
+      // console.log('GetQuote got historical');
+      // console.log(results);
       this.props.cb('historical', results);
 
     });
@@ -376,7 +382,7 @@ const GetQuote = React.createClass({
     // })
   },
   componentWillMount() {
-  // console.log('getQuote componentWillMount');
+    // console.log('getQuote componentWillMount');
     /**
      * TODO: For test only use the for loop when finished
      */
@@ -385,13 +391,13 @@ const GetQuote = React.createClass({
 
   },
   render() {
-  // console.log('GetQuote render');
-  // console.log('symbols');
-  // console.log(this.props.symbols);
-  // console.log('symbol');
-  // console.log(this.props.symbol);
+    // console.log('GetQuote render');
+    // console.log('symbols');
+    // console.log(this.props.symbols);
+    // console.log('symbol');
+    // console.log(this.props.symbol);
     if (this.props.symbol !== '') {
-    // console.log('mock get data');
+      // console.log('mock get data');
       // var symbol = [this.props.symbol];
       this.getData([this.props.symbol]);
     }
