@@ -72,6 +72,11 @@
 
 	// https://api.robinhood.com/quotes/historicals/FB/?interval=10minute&span=day
 
+	// if sass build fails
+	// npm update
+	// npm install
+	// node node_modules/node-sass/scripts/install.js
+	// npm rebuild node-sass
 
 	function getColors(num) {
 	  // console.log('getting colors');
@@ -307,8 +312,8 @@
 	      } else {
 	        console.log('setting chart to LineAndScatterChart');
 	        // chart = <MyChart historical={this.state.historical} />;
-	        var ratio = 2;
-	        var width = 500;
+	        var ratio = 1.5;
+	        var width = 600;
 	        var type = "svg";
 	        chart = React.createElement(LineAndScatterChart, { data: this.state.historical['TWTR'], type: type, ratio: ratio, width: width });
 	        // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
@@ -434,53 +439,35 @@
 	        width = _props.width,
 	        ratio = _props.ratio;
 
-	    console.log(data);
-	    // var test = data[0];
-	    // var mydate = test.date;
-	    // console.log('mydate');
-	    // console.log("%Y-%m-%dT%H:%M:%S:%LZ");
-	    // console.log(mydate);
-	    // 2016-01-04T05:00:00.000Z
-	    // console.log('parse:');
-	    // var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
-	    // console.log(dateFormat);
-	    // var pd = parseTime(mydate);
-	    // console.log(pd);
-	    // var parseTime2 = d3.timeParse("%B %d, %Y");
-	    // var t = parseTime2("June 30, 2015");
-	    // console.log(parseTime2);
-	    // console.log(t);
-	    // console.log(dateFormat(test.date));
-	    // d.getTime(test.date)
-	    // console.log(d);
-	    // console.log(test);
 	    data.forEach(function (d, i) {
 	      var parseTime = d3.timeParse("%Y-%m-%dT%H:%M:%S.%LZ");
 	      var date = parseTime(d.date);
 	      // console.log(date);
 	      d.date = date;
-	      //console.log(d.date);
-	      // d.date = new Date(d3.timeParse("%Y-%m-%dT%H:%M:%SZ")(d.date).getTime());
+	      d.open = +d.open;
+	      d.high = +d.high;
+	      d.low = +d.low;
+	      d.close = +d.close;
+	      d.volume = +d.volume;
 	    });
-	    // console.log(data[0].date.getTime());
-	    // console.log(data);
+	    console.log(data);
 	    var chart = React.createElement(
 	      _reactStockcharts.ChartCanvas,
 	      { ratio: ratio, width: width, height: 400,
 	        margin: { left: 70, right: 70, top: 20, bottom: 30 },
 	        type: type,
 	        pointsPerPxThreshold: 1,
-	        seriesName: 'MSFT',
+	        seriesName: 'TWTR',
 	        data: data,
 	        xAccessor: function xAccessor(d) {
 	          return d.date;
 	        }, xScaleProvider: discontinuousTimeScaleProvider,
-	        xExtents: [new Date(2012, 0, 1), new Date(2012, 2, 2)] },
+	        xExtents: [new Date(2016, 0, 1), new Date(2016, 0, 31)] },
 	      React.createElement(
 	        _reactStockcharts.Chart,
 	        { id: 1,
 	          yExtents: function yExtents(d) {
-	            return [d.high, d.low, d.AAPLClose, d.GEClose];
+	            return [d.high, d.low, d.high, d.low];
 	          } },
 	        React.createElement(XAxis, { axisAt: 'bottom', orient: 'bottom' }),
 	        React.createElement(YAxis, {
@@ -488,8 +475,7 @@
 	          orient: 'right'
 	          // tickInterval={5}
 	          // tickValues={[40, 60]}
-	          , ticks: 5
-	        }),
+	          , ticks: 5 }),
 	        React.createElement(MouseCoordinateX, {
 	          at: 'bottom',
 	          orient: 'bottom',
@@ -498,29 +484,6 @@
 	          at: 'right',
 	          orient: 'right',
 	          displayFormat: (0, _d3Format.format)(".2f") }),
-	        React.createElement(LineSeries, {
-	          yAccessor: function yAccessor(d) {
-	            return d.AAPLClose;
-	          },
-	          stroke: '#ff7f0e',
-	          strokeDasharray: 'Dot' }),
-	        React.createElement(ScatterSeries, {
-	          yAccessor: function yAccessor(d) {
-	            return d.AAPLClose;
-	          },
-	          marker: SquareMarker,
-	          markerProps: { width: 6, stroke: "#ff7f0e", fill: "#ff7f0e" } }),
-	        React.createElement(LineSeries, {
-	          yAccessor: function yAccessor(d) {
-	            return d.GEClose;
-	          },
-	          stroke: '#2ca02c' }),
-	        React.createElement(ScatterSeries, {
-	          yAccessor: function yAccessor(d) {
-	            return d.GEClose;
-	          },
-	          marker: TriangleMarker,
-	          markerProps: { width: 8, stroke: "#2ca02c", fill: "#2ca02c" } }),
 	        React.createElement(LineSeries, {
 	          yAccessor: function yAccessor(d) {
 	            return d.close;
@@ -540,54 +503,17 @@
 	  }
 	});
 
-	// LineAndScatterChart.propTypes = {
-	//   data: React.PropTypes.array.isRequired,
-	//   width: React.PropTypes.number.isRequired,
-	//   ratio: React.PropTypes.number.isRequired,
-	//   type: React.PropTypes.oneOf(["svg", "hybrid"]).isRequired,
-	// };
+	LineAndScatterChart.propTypes = {
+	  data: React.PropTypes.array.isRequired,
+	  width: React.PropTypes.number.isRequired,
+	  ratio: React.PropTypes.number.isRequired,
+	  type: React.PropTypes.oneOf(["svg", "hybrid"]).isRequired
+	};
 
-	// LineAndScatterChart.defaultProps = {
-	//   type: "svg",
-	// };
-	// LineAndScatterChart = fitWidth(LineAndScatterChart);
-
-	var MyChart = React.createClass({
-	  displayName: 'MyChart',
-	  render: function render() {
-	    console.log('Chart render');
-	    var LineChart = rd3.LineChart;
-	    var lineData = [{
-	      name: 'series1',
-	      values: [{ x: 0, y: 20 }, { x: 1, y: 30 }, { x: 2, y: 10 }, { x: 3, y: 5 }, { x: 4, y: 8 }, { x: 5, y: 15 }, { x: 6, y: 10 }],
-	      strokeWidth: 3,
-	      strokeDashArray: "5,5"
-	    }, {
-	      name: 'series2',
-	      values: [{ x: 0, y: 8 }, { x: 1, y: 5 }, { x: 2, y: 20 }, { x: 3, y: 12 }, { x: 4, y: 4 }, { x: 5, y: 6 }, { x: 6, y: 2 }]
-	    }, {
-	      name: 'series3',
-	      values: [{ x: 0, y: 0 }, { x: 1, y: 5 }, { x: 2, y: 8 }, { x: 3, y: 2 }, { x: 4, y: 6 }, { x: 5, y: 4 }, { x: 6, y: 2 }]
-	    }];
-	    return React.createElement(LineChart, {
-	      legend: true,
-	      data: lineData,
-	      width: '100%',
-	      height: 400,
-	      viewBoxObject: {
-	        x: 0,
-	        y: 0,
-	        width: 500,
-	        height: 400
-	      },
-	      title: 'Line Chart',
-	      yAxisLabel: 'Altitude',
-	      xAxisLabel: 'Elapsed Time (sec)',
-	      domain: { x: [, 6], y: [-10] },
-	      gridHorizontal: true
-	    });
-	  }
-	});
+	LineAndScatterChart.defaultProps = {
+	  type: "svg"
+	};
+	LineAndScatterChart = fitWidth(LineAndScatterChart);
 
 	var GetQuote = React.createClass({
 	  displayName: 'GetQuote',
