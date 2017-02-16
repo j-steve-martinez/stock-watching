@@ -81,6 +81,35 @@ class LineAndScatterChart extends React.Component {
 			hist.push(day);
 		}
 		// console.log(hist);
+		var increment = 70;
+		var origin = -40;
+		// origin = origin + increment;
+		var lines = keys.map((value, key) => {
+			// console.log(value);
+			var line = (
+				<LineSeries
+					key={key}
+					yAccessor={d => d[value]}
+					strokeDasharray="Solid" />
+			);
+			return line;
+		});
+
+		var scatters = keys.map((value, key) => {
+			// console.log(value);
+			var line = (
+				<ScatterSeries
+					key={key}
+					yAccessor={d => d[value]}
+					marker={CircleMarker}
+					markerProps={{ r: 3 }}
+					stroke="green" />
+			);
+			return line;
+		});
+
+
+		// console.log(lines);
 
 		return (
 			<ChartCanvas ratio={ratio} width={width} height={400}
@@ -111,44 +140,47 @@ class LineAndScatterChart extends React.Component {
 						orient="right"
 						displayFormat={format(".2f")} />
 
-					<LineSeries
-						yAccessor={d => d.MS}
-						strokeDasharray="Solid"	/>
+					{lines}
+					{scatters}
+
+					{/*<LineSeries
+						yAccessor={d => d[value]}
+						strokeDasharray="Solid" />
 					<ScatterSeries
-						yAccessor={d => d.MS}
+						yAccessor={d => d[value]}
 						marker={CircleMarker}
 						markerProps={{ r: 3 }} />
 					<SingleValueTooltip
-						yAccessor={d => d.MS}
+						yAccessor={d => d[value]}
 						yLabel="MS"
 						yDisplayFormat={format(".2f")}
 						valueStroke="#ff7f0e"
 						labelStroke="#4682B4"
-						origin={[-40, 0]} />
-						
-					<LineSeries
-						yAccessor={d => d.TWTR}
+						origin={[-40, 0]} />*/}
+
+					{/*<LineSeries
+						yAccessor={d => dTWTR}
 						strokeDasharray="Solid"
-						stroke="green"/>
+						stroke="green" />
 					<ScatterSeries
-						yAccessor={d => d.TWTR}
+						yAccessor={d => dTWTR}
 						marker={CircleMarker}
 						markerProps={{ r: 3 }}
 						stroke="green" />
 					<SingleValueTooltip
-						yAccessor={d => d.TWTR}
+						yAccessor={d => dTWTR}
 						yLabel="TWTR"
 						yDisplayFormat={format(".2f")}
 						valueStroke="#2ca02c"
 						labelStroke="#4682B4"
 						origin={[30, 0]} />
 					<SingleValueTooltip
-						yAccessor={d => d.TWTR}
+						yAccessor={d => dTWTR}
 						yLabel="TWTR"
 						yDisplayFormat={format(".2f")}
 						valueStroke="#2ca02c"
 						labelStroke="#4682B4"
-						origin={[100, 0]} />
+						origin={[100, 0]} />*/}
 				</Chart>
 
 				<CrossHairCursor />
