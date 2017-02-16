@@ -19,7 +19,7 @@ function Quotes() {
                 to: '2016-01-31',
             }).then(result => {
                 // if (err) { throw err; }
-                // console.log(result);
+                console.log(result);
                 res.send(result);
 
             });

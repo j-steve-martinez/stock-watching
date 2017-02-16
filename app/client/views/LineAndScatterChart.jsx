@@ -74,13 +74,7 @@ class LineAndScatterChart extends React.Component {
 			hist.push(day);
 		}
 		console.log(hist);
-					// 		{/*<LineSeries
-					// 	yAccessor={d => d.close}
-					// 	strokeDasharray="LongDash" />
-					// <ScatterSeries
-					// 	yAccessor={d => d.close}
-					// 	marker={CircleMarker}
-					// 	markerProps={{ r: 3 }} />*/}
+
 		return (
 			<ChartCanvas ratio={ratio} width={width} height={400}
 				margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
@@ -125,7 +119,7 @@ class LineAndScatterChart extends React.Component {
 						yAccessor={d => d.MSFT}
 						marker={CircleMarker}
 						markerProps={{ r: 3 }} />
-					{/*<OHLCTooltip forChart={1} origin={[-40, 0]} />*/}
+					<OHLCTooltip forChart={1} origin={[-20, 0]} />
 				</Chart>
 
 				<CrossHairCursor />

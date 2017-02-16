@@ -7,9 +7,7 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:dev": "nodemon --delay 3 --ignore public/js/primus.js",
     "start:prod": "node server.js",
-    "build:dev": "webpack -w",
-    "build:prod": "webpack",
-    "build": "npm run build:prod"
+    "build": "webpack -w"
   },
   "repository": {
     "type": "git",
