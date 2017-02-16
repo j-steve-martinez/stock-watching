@@ -36,7 +36,17 @@ class CandleStickChartWithMA extends React.Component {
 		});
 
 		console.log(data);
-
+		var test = {ms : 'MS'};
+		test.ms 
+		
+		test.ms = sma()
+			.windowSize(20)
+			.sourcePath("low")
+			.merge((d, c) => { d.low = c })
+			.accessor(d => d.low)
+			.stroke("blue")
+			.fill("blue");
+console.log(test.ms);
 		var ema20 = ema()
 			.windowSize(20) // optional will default to 10
 			.sourcePath("close") // optional will default to close as the source
@@ -68,18 +78,18 @@ class CandleStickChartWithMA extends React.Component {
 			.accessor(d => d.volume)
 			.stroke("green")
 			.fill("green");
-
+		var test2 = [test.ms.accessor(), sma20.accessor(), ema20.accessor(), ema50.accessor()];
 		return (
 			<ChartCanvas ratio={ratio} width={width} height={400}
 				margin={{ left: 70, right: 70, top: 10, bottom: 30 }} 
 				type={type}
 				seriesName="All Stock"
 				data={data} 
-				calculator={[sma20, ema20, ema50, smaVolume50]}
+				calculator={[test.ms, sma20, ema20, ema50, smaVolume50]}
 				xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
 				xExtents={[new Date(2016, 0, 1), new Date(2016, 0, 29)]}>
 				<Chart id={1}
-					yExtents={[d => [d.high, d.low], sma20.accessor(), ema20.accessor(), ema50.accessor()]}
+					yExtents={[d => [d.high, d.low], test2]}
 					padding={{ top: 100, bottom: 50 }}>
 					<XAxis axisAt="bottom" orient="bottom" />
 					<YAxis axisAt="right" orient="right" ticks={5} />
@@ -89,12 +99,12 @@ class CandleStickChartWithMA extends React.Component {
 						orient="right"
 						displayFormat={format(".2f")} />
 
-					<LineSeries yAccessor={sma20.accessor()} stroke={sma20.stroke()} />
-					<LineSeries yAccessor={ema20.accessor()} stroke={ema20.stroke()} />
-					<LineSeries yAccessor={ema50.accessor()} stroke={ema50.stroke()} />
-					<CurrentCoordinate yAccessor={sma20.accessor()} fill={sma20.stroke()} />
-					<CurrentCoordinate yAccessor={ema20.accessor()} fill={ema20.stroke()} />
-					<CurrentCoordinate yAccessor={ema50.accessor()} fill={ema50.stroke()} />
+					{/*<LineSeries yAccessor={sma20.accessor()} stroke={sma20.stroke()} />*/}
+					<LineSeries yAccessor={test.ms.accessor()} stroke={test.ms.stroke()} />
+					{/*<LineSeries yAccessor={ema50.accessor()} stroke={ema50.stroke()} />*/}
+					{/*<CurrentCoordinate yAccessor={sma20.accessor()} fill={sma20.stroke()} />*/}
+					<CurrentCoordinate yAccessor={test.ms.accessor()} fill={test.ms.stroke()} />
+					{/*<CurrentCoordinate yAccessor={ema50.accessor()} fill={ema50.stroke()} />*/}
 
 					<OHLCTooltip origin={[-40, 0]} />
 					<MovingAverageTooltip onClick={(e) => console.log(e)} origin={[-38, 15]}

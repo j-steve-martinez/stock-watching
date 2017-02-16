@@ -54267,7 +54267,15 @@
 				});
 
 				console.log(data);
+				var test = { ms: 'MS' };
+				test.ms;
 
+				test.ms = sma().windowSize(20).sourcePath("low").merge(function (d, c) {
+					d.low = c;
+				}).accessor(function (d) {
+					return d.low;
+				}).stroke("blue").fill("blue");
+				console.log(test.ms);
 				var ema20 = ema().windowSize(20) // optional will default to 10
 				.sourcePath("close") // optional will default to close as the source
 				.skipUndefined(true) // defaults to true
@@ -54296,7 +54304,7 @@
 				}).accessor(function (d) {
 					return d.volume;
 				}).stroke("green").fill("green");
-
+				var test2 = [test.ms.accessor(), sma20.accessor(), ema20.accessor(), ema50.accessor()];
 				return _react2.default.createElement(
 					_reactStockcharts.ChartCanvas,
 					{ ratio: ratio, width: width, height: 400,
@@ -54304,7 +54312,7 @@
 						type: type,
 						seriesName: "All Stock",
 						data: data,
-						calculator: [sma20, ema20, ema50, smaVolume50],
+						calculator: [test.ms, sma20, ema20, ema50, smaVolume50],
 						xAccessor: function xAccessor(d) {
 							return d.date;
 						}, xScaleProvider: discontinuousTimeScaleProvider,
@@ -54314,7 +54322,7 @@
 						{ id: 1,
 							yExtents: [function (d) {
 								return [d.high, d.low];
-							}, sma20.accessor(), ema20.accessor(), ema50.accessor()],
+							}, test2],
 							padding: { top: 100, bottom: 50 } },
 						_react2.default.createElement(XAxis, { axisAt: "bottom", orient: "bottom" }),
 						_react2.default.createElement(YAxis, { axisAt: "right", orient: "right", ticks: 5 }),
@@ -54322,12 +54330,8 @@
 							at: "right",
 							orient: "right",
 							displayFormat: (0, _d3Format.format)(".2f") }),
-						_react2.default.createElement(LineSeries, { yAccessor: sma20.accessor(), stroke: sma20.stroke() }),
-						_react2.default.createElement(LineSeries, { yAccessor: ema20.accessor(), stroke: ema20.stroke() }),
-						_react2.default.createElement(LineSeries, { yAccessor: ema50.accessor(), stroke: ema50.stroke() }),
-						_react2.default.createElement(CurrentCoordinate, { yAccessor: sma20.accessor(), fill: sma20.stroke() }),
-						_react2.default.createElement(CurrentCoordinate, { yAccessor: ema20.accessor(), fill: ema20.stroke() }),
-						_react2.default.createElement(CurrentCoordinate, { yAccessor: ema50.accessor(), fill: ema50.stroke() }),
+						_react2.default.createElement(LineSeries, { yAccessor: test.ms.accessor(), stroke: test.ms.stroke() }),
+						_react2.default.createElement(CurrentCoordinate, { yAccessor: test.ms.accessor(), fill: test.ms.stroke() }),
 						_react2.default.createElement(OHLCTooltip, { origin: [-40, 0] }),
 						_react2.default.createElement(MovingAverageTooltip, { onClick: function onClick(e) {
 								return console.log(e);
