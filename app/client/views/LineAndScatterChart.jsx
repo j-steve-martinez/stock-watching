@@ -11,7 +11,7 @@ var { discontinuousTimeScaleProvider } = scale;
 
 var { CrossHairCursor, MouseCoordinateX, MouseCoordinateY } = coordinates;
 
-var { OHLCTooltip } = tooltip;
+var { OHLCTooltip, SingleValueTooltip } = tooltip;
 var { XAxis, YAxis } = axes;
 var { fitWidth, TypeChooser } = helper;
 
@@ -21,6 +21,13 @@ class LineAndScatterChart extends React.Component {
 		var { data, type, width, ratio } = this.props,
 			parseTime = timeParse("%Y-%m-%dT%H:%M:%S.%LZ"),
 			date, keys, chart, hist = [];
+		/**
+ 		 * Testing setting properties
+ 		 */
+		// var myLine = LineSeries
+
+		// console.log(myLine);
+
 		data = data[0];
 		// console.log('data');
 		// console.log(data);
@@ -73,7 +80,7 @@ class LineAndScatterChart extends React.Component {
 			// console.log(day);
 			hist.push(day);
 		}
-		console.log(hist);
+		// console.log(hist);
 
 		return (
 			<ChartCanvas ratio={ratio} width={width} height={400}
@@ -85,15 +92,15 @@ class LineAndScatterChart extends React.Component {
 				xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
 				xExtents={[new Date(2016, 0, 1), new Date(2016, 3, 1)]}>
 				<Chart id={1}
-					yExtents={d => [d.high, d.low]}>
-					
+					yExtents={d => [d.high, d.low]}
+					padding={{ top: 25, bottom: 5 }}>
 					<XAxis axisAt="bottom" orient="bottom" />
 					<YAxis
 						axisAt="right"
 						orient="right"
 						// tickInterval={5}
 						// tickValues={[40, 60]}
-						ticks={20}
+						ticks={10}
 					/>
 					<MouseCoordinateX
 						at="bottom"
@@ -105,21 +112,43 @@ class LineAndScatterChart extends React.Component {
 						displayFormat={format(".2f")} />
 
 					<LineSeries
-						yAccessor={d => d.GOOG}
-						strokeDasharray="LongDash" />
+						yAccessor={d => d.MS}
+						strokeDasharray="Solid"	/>
 					<ScatterSeries
-						yAccessor={d => d.GOOG}
+						yAccessor={d => d.MS}
 						marker={CircleMarker}
 						markerProps={{ r: 3 }} />
-
+					<SingleValueTooltip
+						yAccessor={d => d.MS}
+						yLabel="MS"
+						yDisplayFormat={format(".2f")}
+						valueStroke="#ff7f0e"
+						labelStroke="#4682B4"
+						origin={[-40, 0]} />
+						
 					<LineSeries
-						yAccessor={d => d.MSFT}
-						strokeDasharray="LongDash" />
+						yAccessor={d => d.TWTR}
+						strokeDasharray="Solid"
+						stroke="green"/>
 					<ScatterSeries
-						yAccessor={d => d.MSFT}
+						yAccessor={d => d.TWTR}
 						marker={CircleMarker}
-						markerProps={{ r: 3 }} />
-					<OHLCTooltip forChart={1} origin={[-20, 0]} />
+						markerProps={{ r: 3 }}
+						stroke="green" />
+					<SingleValueTooltip
+						yAccessor={d => d.TWTR}
+						yLabel="TWTR"
+						yDisplayFormat={format(".2f")}
+						valueStroke="#2ca02c"
+						labelStroke="#4682B4"
+						origin={[30, 0]} />
+					<SingleValueTooltip
+						yAccessor={d => d.TWTR}
+						yLabel="TWTR"
+						yDisplayFormat={format(".2f")}
+						valueStroke="#2ca02c"
+						labelStroke="#4682B4"
+						origin={[100, 0]} />
 				</Chart>
 
 				<CrossHairCursor />
@@ -138,6 +167,23 @@ LineAndScatterChart.propTypes = {
 LineAndScatterChart.defaultProps = {
 	type: "svg",
 };
+
 LineAndScatterChart = fitWidth(LineAndScatterChart);
+
+LineSeries.defaultProps = {
+	className: "line ",
+	strokeWidth: 1,
+	hoverStrokeWidth: 4,
+	fill: "none",
+	stroke: "#4682B4",
+	strokeDasharray: "Solid",
+	defined: d => !isNaN(d),
+	hoverTolerance: 6,
+	highlightOnHover: true,
+	connectNulls: false,
+	onClick: function (e) { console.log("Click", e); },
+	onDoubleClick: function (e) { console.log("Double Click", e); },
+	onContextMenu: function (e) { console.log("Right Click", e); },
+};
 
 export default LineAndScatterChart;

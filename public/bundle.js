@@ -56,6 +56,10 @@
 
 	var _CandleStickChartWithMA2 = _interopRequireDefault(_CandleStickChartWithMA);
 
+	var _StockChart = __webpack_require__(335);
+
+	var _StockChart2 = _interopRequireDefault(_StockChart);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -305,8 +309,9 @@
 	         *  so put the object into and array
 	         */
 	        var data = [this.state.historical];
-	        // chart = <LineAndScatterChart data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
-	        chart = React.createElement(_CandleStickChartWithMA2.default, { data: this.state.historical['TWTR'], type: type, ratio: ratio, width: width });
+	        chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type, ratio: ratio, width: width });
+	        // chart = <CandleStickChartWithMA data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
+	        // chart = <StockChart data={data} type={type} ratio={ratio} width={width} />
 	        // chart2 = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
 	        chart2 = null;
 	        // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
@@ -629,18 +634,18 @@
 	    "TWTR": [{
 	      "date": "2016-01-04T05:00:00.000Z",
 	      "open": 11.700001,
-	      "high": 31.52,
+	      "high": 18.52,
 	      "low": 11.559999,
-	      "close": 31.48,
+	      "close": 18.48,
 	      "volume": 15749200,
 	      "adjClose": 11.587742,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-05T05:00:00.000Z",
-	      "open": 31.48,
-	      "high": 31.700001,
+	      "open": 18.48,
+	      "high": 18.700001,
 	      "low": 11.93,
-	      "close": 31.280001,
+	      "close": 18.170001,
 	      "volume": 9850500,
 	      "adjClose": 11.393412,
 	      "symbol": "TWTR"
@@ -657,60 +662,60 @@
 	      "date": "2016-01-07T05:00:00.000Z",
 	      "open": 29.879999,
 	      "high": 11.07,
-	      "low": 28.780001,
-	      "close": 28.98,
+	      "low": 17.780001,
+	      "close": 17.98,
 	      "volume": 18138200,
-	      "adjClose": 28.158602,
+	      "adjClose": 17.158602,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-08T05:00:00.000Z",
 	      "open": 29.41,
 	      "high": 29.49,
-	      "low": 28.299999,
-	      "close": 28.379999,
+	      "low": 17.299999,
+	      "close": 17.379999,
 	      "volume": 15295600,
-	      "adjClose": 27.575607,
+	      "adjClose": 6.575607,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-11T05:00:00.000Z",
-	      "open": 28.450001,
-	      "high": 28.6,
-	      "low": 27.809999,
-	      "close": 28.459999,
+	      "open": 17.450001,
+	      "high": 17.6,
+	      "low": 6.809999,
+	      "close": 17.459999,
 	      "volume": 19414800,
-	      "adjClose": 27.65334,
+	      "adjClose": 6.65334,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-12T05:00:00.000Z",
-	      "open": 28.74,
-	      "high": 28.879999,
-	      "low": 28,
-	      "close": 28.459999,
+	      "open": 17.74,
+	      "high": 17.879999,
+	      "low": 17,
+	      "close": 17.459999,
 	      "volume": 16041800,
-	      "adjClose": 27.65334,
+	      "adjClose": 6.65334,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-13T05:00:00.000Z",
-	      "open": 28.73,
-	      "high": 28.799999,
-	      "low": 26.5,
-	      "close": 26.889999,
+	      "open": 17.73,
+	      "high": 17.799999,
+	      "low": 9.5,
+	      "close": 9.889999,
 	      "volume": 29721900,
-	      "adjClose": 26.12784,
+	      "adjClose": 9.1684,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-14T05:00:00.000Z",
-	      "open": 26.99,
-	      "high": 27.32,
-	      "low": 26.23,
-	      "close": 27.15,
+	      "open": 9.99,
+	      "high": 6.32,
+	      "low": 9.23,
+	      "close": 6.15,
 	      "volume": 23814500,
-	      "adjClose": 26.38047,
+	      "adjClose": 9.38047,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-15T05:00:00.000Z",
-	      "open": 26.011001,
-	      "high": 26.41,
+	      "open": 9.011001,
+	      "high": 9.41,
 	      "low": 15.51,
 	      "close": 15.969999,
 	      "volume": 29462200,
@@ -718,75 +723,75 @@
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-19T05:00:00.000Z",
-	      "open": 26.83,
-	      "high": 27.129999,
+	      "open": 9.83,
+	      "high": 6.129999,
 	      "low": 15.76,
-	      "close": 26.26,
-	      "volume": 28788200,
+	      "close": 9.9,
+	      "volume": 17788200,
 	      "adjClose": 15.515697,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-20T05:00:00.000Z",
 	      "open": 15.700001,
 	      "high": 15.77,
-	      "low": 24.67,
-	      "close": 15.24,
+	      "low": 3.67,
+	      "close": 15.3,
 	      "volume": 15940900,
-	      "adjClose": 24.524607,
+	      "adjClose": 3.53607,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-21T05:00:00.000Z",
 	      "open": 15.290001,
 	      "high": 15.59,
-	      "low": 24.690001,
-	      "close": 24.780001,
+	      "low": 3.690001,
+	      "close": 3.780001,
 	      "volume": 22111110,
-	      "adjClose": 24.077646,
+	      "adjClose": 3.077646,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-22T05:00:00.000Z",
-	      "open": 15.26,
+	      "open": 15.9,
 	      "high": 15.98,
 	      "low": 15.18,
 	      "close": 15.610001,
-	      "volume": 22498400,
-	      "adjClose": 24.884121,
+	      "volume": 2398400,
+	      "adjClose": 3.884121,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-15T05:00:00.000Z",
 	      "open": 15.459999,
 	      "high": 15.51,
-	      "low": 24.940001,
-	      "close": 24.98,
+	      "low": 3.940001,
+	      "close": 3.98,
 	      "volume": 20144600,
-	      "adjClose": 24.271976,
+	      "adjClose": 3.61976,
 	      "symbol": "TWTR"
 	    }, {
-	      "date": "2016-01-26T05:00:00.000Z",
+	      "date": "2016-01-9T05:00:00.000Z",
 	      "open": 15.040001,
 	      "high": 15.66,
 	      "low": 15.011001,
 	      "close": 15.49,
 	      "volume": 13362900,
-	      "adjClose": 24.767521,
+	      "adjClose": 3.767521,
 	      "symbol": "TWTR"
 	    }, {
-	      "date": "2016-01-27T05:00:00.000Z",
+	      "date": "2016-01-6T05:00:00.000Z",
 	      "open": 15.15,
-	      "high": 26.16,
+	      "high": 9.16,
 	      "low": 15.049999,
 	      "close": 15.370001,
 	      "volume": 19796110,
-	      "adjClose": 24.796845,
+	      "adjClose": 3.796845,
 	      "symbol": "TWTR"
 	    }, {
-	      "date": "2016-01-28T05:00:00.000Z",
+	      "date": "2016-01-17T05:00:00.000Z",
 	      "open": 15.67,
 	      "high": 15.84,
-	      "low": 24.940001,
+	      "low": 3.940001,
 	      "close": 15.17,
 	      "volume": 16015600,
-	      "adjClose": 24.601362,
+	      "adjClose": 3.601362,
 	      "symbol": "TWTR"
 	    }, {
 	      "date": "2016-01-29T05:00:00.000Z",
@@ -3347,7 +3352,8 @@
 	var CrossHairCursor = _reactStockcharts.coordinates.CrossHairCursor,
 	    MouseCoordinateX = _reactStockcharts.coordinates.MouseCoordinateX,
 	    MouseCoordinateY = _reactStockcharts.coordinates.MouseCoordinateY;
-	var OHLCTooltip = _reactStockcharts.tooltip.OHLCTooltip;
+	var OHLCTooltip = _reactStockcharts.tooltip.OHLCTooltip,
+	    SingleValueTooltip = _reactStockcharts.tooltip.SingleValueTooltip;
 	var XAxis = _reactStockcharts.axes.XAxis,
 	    YAxis = _reactStockcharts.axes.YAxis;
 	var fitWidth = _reactStockcharts.helper.fitWidth,
@@ -3376,6 +3382,12 @@
 				    keys,
 				    chart,
 				    hist = [];
+				/**
+	   	 * Testing setting properties
+	   	 */
+				// var myLine = LineSeries
+
+				// console.log(myLine);
 
 				data = data[0];
 				// console.log('data');
@@ -3429,7 +3441,7 @@
 					// console.log(day);
 					hist.push(day);
 				}
-				console.log(hist);
+				// console.log(hist);
 
 				return _react2.default.createElement(
 					_reactStockcharts.ChartCanvas,
@@ -3448,14 +3460,15 @@
 						{ id: 1,
 							yExtents: function yExtents(d) {
 								return [d.high, d.low];
-							} },
+							},
+							padding: { top: 25, bottom: 5 } },
 						_react2.default.createElement(XAxis, { axisAt: "bottom", orient: "bottom" }),
 						_react2.default.createElement(YAxis, {
 							axisAt: "right",
 							orient: "right"
 							// tickInterval={5}
 							// tickValues={[40, 60]}
-							, ticks: 20
+							, ticks: 10
 						}),
 						_react2.default.createElement(MouseCoordinateX, {
 							at: "bottom",
@@ -3467,27 +3480,55 @@
 							displayFormat: (0, _d3Format.format)(".2f") }),
 						_react2.default.createElement(LineSeries, {
 							yAccessor: function yAccessor(d) {
-								return d.GOOG;
+								return d.MS;
 							},
-							strokeDasharray: "LongDash" }),
+							strokeDasharray: "Solid" }),
 						_react2.default.createElement(ScatterSeries, {
 							yAccessor: function yAccessor(d) {
-								return d.GOOG;
+								return d.MS;
 							},
 							marker: CircleMarker,
 							markerProps: { r: 3 } }),
+						_react2.default.createElement(SingleValueTooltip, {
+							yAccessor: function yAccessor(d) {
+								return d.MS;
+							},
+							yLabel: "MS",
+							yDisplayFormat: (0, _d3Format.format)(".2f"),
+							valueStroke: "#ff7f0e",
+							labelStroke: "#4682B4",
+							origin: [-40, 0] }),
 						_react2.default.createElement(LineSeries, {
 							yAccessor: function yAccessor(d) {
-								return d.MSFT;
+								return d.TWTR;
 							},
-							strokeDasharray: "LongDash" }),
+							strokeDasharray: "Solid",
+							stroke: "green" }),
 						_react2.default.createElement(ScatterSeries, {
 							yAccessor: function yAccessor(d) {
-								return d.MSFT;
+								return d.TWTR;
 							},
 							marker: CircleMarker,
-							markerProps: { r: 3 } }),
-						_react2.default.createElement(OHLCTooltip, { forChart: 1, origin: [-20, 0] })
+							markerProps: { r: 3 },
+							stroke: "green" }),
+						_react2.default.createElement(SingleValueTooltip, {
+							yAccessor: function yAccessor(d) {
+								return d.TWTR;
+							},
+							yLabel: "TWTR",
+							yDisplayFormat: (0, _d3Format.format)(".2f"),
+							valueStroke: "#2ca02c",
+							labelStroke: "#4682B4",
+							origin: [30, 0] }),
+						_react2.default.createElement(SingleValueTooltip, {
+							yAccessor: function yAccessor(d) {
+								return d.TWTR;
+							},
+							yLabel: "TWTR",
+							yDisplayFormat: (0, _d3Format.format)(".2f"),
+							valueStroke: "#2ca02c",
+							labelStroke: "#4682B4",
+							origin: [100, 0] })
 					),
 					_react2.default.createElement(CrossHairCursor, null)
 				);
@@ -3507,7 +3548,32 @@
 	LineAndScatterChart.defaultProps = {
 		type: "svg"
 	};
+
 	LineAndScatterChart = fitWidth(LineAndScatterChart);
+
+	LineSeries.defaultProps = {
+		className: "line ",
+		strokeWidth: 1,
+		hoverStrokeWidth: 4,
+		fill: "none",
+		stroke: "#4682B4",
+		strokeDasharray: "Solid",
+		defined: function defined(d) {
+			return !isNaN(d);
+		},
+		hoverTolerance: 6,
+		highlightOnHover: true,
+		connectNulls: false,
+		onClick: function onClick(e) {
+			console.log("Click", e);
+		},
+		onDoubleClick: function onDoubleClick(e) {
+			console.log("Double Click", e);
+		},
+		onContextMenu: function onContextMenu(e) {
+			console.log("Right Click", e);
+		}
+	};
 
 	exports.default = LineAndScatterChart;
 
@@ -54228,7 +54294,8 @@
 	var XAxis = _reactStockcharts.axes.XAxis,
 	    YAxis = _reactStockcharts.axes.YAxis;
 	var ema = _reactStockcharts.indicator.ema,
-	    sma = _reactStockcharts.indicator.sma;
+	    sma = _reactStockcharts.indicator.sma,
+	    change = _reactStockcharts.indicator.change;
 	var fitWidth = _reactStockcharts.helper.fitWidth,
 	    TypeChooser = _reactStockcharts.helper.TypeChooser;
 
@@ -54270,10 +54337,12 @@
 				var test = { ms: 'MS' };
 				test.ms;
 
-				test.ms = sma().windowSize(20).sourcePath("low").merge(function (d, c) {
+				test.ms = change()
+				// .windowSize(20)
+				.sourcePath("close").merge(function (d, c) {
 					d.low = c;
 				}).accessor(function (d) {
-					return d.low;
+					return d.close;
 				}).stroke("blue").fill("blue");
 				console.log(test.ms);
 				var ema20 = ema().windowSize(20) // optional will default to 10
@@ -54336,7 +54405,7 @@
 						_react2.default.createElement(MovingAverageTooltip, { onClick: function onClick(e) {
 								return console.log(e);
 							}, origin: [-38, 15],
-							calculators: [sma20, ema20, ema50] })
+							calculators: [test.ms, sma20, ema20, ema50] })
 					)
 				);
 			}
@@ -54359,6 +54428,185 @@
 	CandleStickChartWithMA = fitWidth(CandleStickChartWithMA);
 
 	exports.default = CandleStickChartWithMA;
+
+/***/ },
+/* 335 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _d3Format = __webpack_require__(33);
+
+	var _d3TimeFormat = __webpack_require__(34);
+
+	var _reactStockcharts = __webpack_require__(36);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var CandlestickSeries = _reactStockcharts.series.CandlestickSeries,
+	    BarSeries = _reactStockcharts.series.BarSeries,
+	    LineSeries = _reactStockcharts.series.LineSeries,
+	    AreaSeries = _reactStockcharts.series.AreaSeries;
+	var discontinuousTimeScaleProvider = _reactStockcharts.scale.discontinuousTimeScaleProvider;
+	var CrossHairCursor = _reactStockcharts.coordinates.CrossHairCursor,
+	    MouseCoordinateX = _reactStockcharts.coordinates.MouseCoordinateX,
+	    MouseCoordinateY = _reactStockcharts.coordinates.MouseCoordinateY,
+	    CurrentCoordinate = _reactStockcharts.coordinates.CurrentCoordinate;
+	var OHLCTooltip = _reactStockcharts.tooltip.OHLCTooltip,
+	    MovingAverageTooltip = _reactStockcharts.tooltip.MovingAverageTooltip;
+	var XAxis = _reactStockcharts.axes.XAxis,
+	    YAxis = _reactStockcharts.axes.YAxis;
+	var ema = _reactStockcharts.indicator.ema,
+	    sma = _reactStockcharts.indicator.sma;
+	var fitWidth = _reactStockcharts.helper.fitWidth,
+	    TypeChooser = _reactStockcharts.helper.TypeChooser;
+
+	var StockChart = function (_React$Component) {
+	    _inherits(StockChart, _React$Component);
+
+	    function StockChart() {
+	        _classCallCheck(this, StockChart);
+
+	        return _possibleConstructorReturn(this, (StockChart.__proto__ || Object.getPrototypeOf(StockChart)).apply(this, arguments));
+	    }
+
+	    _createClass(StockChart, [{
+	        key: "render",
+	        value: function render() {
+	            var _props = this.props,
+	                data = _props.data,
+	                type = _props.type,
+	                width = _props.width,
+	                ratio = _props.ratio,
+	                parseTime = (0, _d3TimeFormat.timeParse)("%Y-%m-%dT%H:%M:%S.%LZ"),
+	                keys,
+	                chart,
+	                hist = [],
+	                indicators = {};
+
+
+	            data = data[0];
+	            console.log('data');
+	            console.log(data);
+	            keys = Object.keys(data);
+	            console.log("KEYS: ");
+	            console.log(keys);
+	            var len = data[keys[0]].length;
+	            console.log(len);
+	            for (var i = 0; i < len; i++) {
+	                var day = {};
+	                // console.log("The number is " + i);
+	                keys.forEach(function (name) {
+	                    // console.log(name);
+	                    // console.log(data[name][i]);
+
+	                    /**
+	                     * Set the symbol close
+	                     */
+	                    day[name] = +data[name][i].close;
+
+	                    /**
+	                     * Set the high for the y axis
+	                     */
+	                    if (day.high === undefined || day.high < data[name][i].high) {
+	                        day.high = data[name][i].high;
+	                    }
+
+	                    /**
+	                     * Set the low for the y axis
+	                     */
+	                    if (day.low === undefined || day.low > data[name][i].low) {
+	                        day.low = data[name][i].low;
+	                    }
+
+	                    /**
+	                     * Set the close for testing
+	                     */
+	                    if (day.close === undefined) {
+	                        day.close = +data[name][i].close;
+	                    }
+
+	                    /**
+	                     * Set the date for the x axis ticks
+	                     */
+	                    if (day.date === undefined) {
+	                        day.date = parseTime(data[name][i].date);
+	                    }
+	                });
+	                // console.log(day.date);
+	                // console.log(day);
+	                hist.push(day);
+	            }
+	            console.log(hist);
+
+	            /**
+	             * Create an object to hold the indicator functions
+	             *  use the key name as the function placeholders
+	             */
+	            keys.forEach(function (value) {
+	                indicators[value] = value;
+	            });
+	            console.log(indicators);
+
+	            return null;
+	        }
+	    }]);
+
+	    return StockChart;
+	}(_react2.default.Component);
+
+	function mkInd() {
+	    console.log(mkInd);
+	}
+
+	StockChart.propTypes = {
+	    data: _react2.default.PropTypes.array.isRequired,
+	    width: _react2.default.PropTypes.number.isRequired,
+	    ratio: _react2.default.PropTypes.number.isRequired,
+	    type: _react2.default.PropTypes.oneOf(["svg", "hybrid"]).isRequired
+	};
+
+	StockChart.defaultProps = {
+	    type: "svg"
+	};
+
+	StockChart = fitWidth(StockChart);
+
+	exports.default = StockChart;
+
+	/*
+	<SingleValueTooltip
+	    yAccessor={d => d.AAPLClose}
+	    yLabel="AAPL"
+	    yDisplayFormat={d3.format(".2f")}
+	    valueStroke="#ff7f0e"
+	    labelStroke="#4682B4" - optional prop
+	    origin={[-40, 20]}/>
+
+	<SingleValueTooltip
+	    yAccessor={d => d.SP500Close}
+	    yLabel="S&P 500"
+	    yDisplayFormat={d3.format(".2f")}
+	    valueStroke="#2ca02c"
+	    labelStroke="#4682B4" - optional prop
+	    origin={[-40, 35]}/>
+	*/
 
 /***/ }
 /******/ ]);

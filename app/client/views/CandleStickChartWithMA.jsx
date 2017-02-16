@@ -12,7 +12,7 @@ var { CrossHairCursor, MouseCoordinateX, MouseCoordinateY, CurrentCoordinate } =
 
 var { OHLCTooltip, MovingAverageTooltip } = tooltip;
 var { XAxis, YAxis } = axes;
-var { ema, sma } = indicator;
+var { ema, sma, change } = indicator;
 
 var { fitWidth, TypeChooser } = helper;
 
@@ -39,11 +39,11 @@ class CandleStickChartWithMA extends React.Component {
 		var test = {ms : 'MS'};
 		test.ms 
 		
-		test.ms = sma()
-			.windowSize(20)
-			.sourcePath("low")
+		test.ms = change()
+			// .windowSize(20)
+			.sourcePath("close")
 			.merge((d, c) => { d.low = c })
-			.accessor(d => d.low)
+			.accessor(d => d.close)
 			.stroke("blue")
 			.fill("blue");
 console.log(test.ms);
@@ -108,7 +108,7 @@ console.log(test.ms);
 
 					<OHLCTooltip origin={[-40, 0]} />
 					<MovingAverageTooltip onClick={(e) => console.log(e)} origin={[-38, 15]}
-						calculators={[sma20, ema20, ema50]} />
+						calculators={[test.ms, sma20, ema20, ema50]} />
 				</Chart>
 				{/*<CrossHairCursor />*/}
 			</ChartCanvas>

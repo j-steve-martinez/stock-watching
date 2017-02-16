@@ -4,6 +4,7 @@ var ReactDOM = require('react-dom');
 
 import LineAndScatterChart from './LineAndScatterChart.jsx';
 import CandleStickChartWithMA from './CandleStickChartWithMA.jsx';
+import StockChart from './StockChart.jsx';
 
 // if sass build fails
 // npm update
@@ -228,8 +229,9 @@ class Main extends React.Component {
        *  so put the object into and array
        */
       var data = [this.state.historical];
-      // chart = <LineAndScatterChart data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
-      chart = <CandleStickChartWithMA data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
+      chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
+      // chart = <CandleStickChartWithMA data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
+      // chart = <StockChart data={data} type={type} ratio={ratio} width={width} />
       // chart2 = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
       chart2 = null
       // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
@@ -486,19 +488,19 @@ function getMockData() {
       {
         "date": "2016-01-04T05:00:00.000Z",
         "open": 11.700001,
-        "high": 31.52,
+        "high": 18.52,
         "low": 11.559999,
-        "close": 31.48,
+        "close": 18.48,
         "volume": 15749200,
         "adjClose": 11.587742,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-05T05:00:00.000Z",
-        "open": 31.48,
-        "high": 31.700001,
+        "open": 18.48,
+        "high": 18.700001,
         "low": 11.93,
-        "close": 31.280001,
+        "close": 18.170001,
         "volume": 9850500,
         "adjClose": 11.393412,
         "symbol": "TWTR"
@@ -517,66 +519,66 @@ function getMockData() {
         "date": "2016-01-07T05:00:00.000Z",
         "open": 29.879999,
         "high": 11.07,
-        "low": 28.780001,
-        "close": 28.98,
+        "low": 17.780001,
+        "close": 17.98,
         "volume": 18138200,
-        "adjClose": 28.158602,
+        "adjClose": 17.158602,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-08T05:00:00.000Z",
         "open": 29.41,
         "high": 29.49,
-        "low": 28.299999,
-        "close": 28.379999,
+        "low": 17.299999,
+        "close": 17.379999,
         "volume": 15295600,
-        "adjClose": 27.575607,
+        "adjClose": 6.575607,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-11T05:00:00.000Z",
-        "open": 28.450001,
-        "high": 28.6,
-        "low": 27.809999,
-        "close": 28.459999,
+        "open": 17.450001,
+        "high": 17.6,
+        "low": 6.809999,
+        "close": 17.459999,
         "volume": 19414800,
-        "adjClose": 27.65334,
+        "adjClose": 6.65334,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-12T05:00:00.000Z",
-        "open": 28.74,
-        "high": 28.879999,
-        "low": 28,
-        "close": 28.459999,
+        "open": 17.74,
+        "high": 17.879999,
+        "low": 17,
+        "close": 17.459999,
         "volume": 16041800,
-        "adjClose": 27.65334,
+        "adjClose": 6.65334,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-13T05:00:00.000Z",
-        "open": 28.73,
-        "high": 28.799999,
-        "low": 26.5,
-        "close": 26.889999,
+        "open": 17.73,
+        "high": 17.799999,
+        "low": 9.5,
+        "close": 9.889999,
         "volume": 29721900,
-        "adjClose": 26.12784,
+        "adjClose": 9.1684,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-14T05:00:00.000Z",
-        "open": 26.99,
-        "high": 27.32,
-        "low": 26.23,
-        "close": 27.15,
+        "open": 9.99,
+        "high": 6.32,
+        "low": 9.23,
+        "close": 6.15,
         "volume": 23814500,
-        "adjClose": 26.38047,
+        "adjClose": 9.38047,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-15T05:00:00.000Z",
-        "open": 26.011001,
-        "high": 26.41,
+        "open": 9.011001,
+        "high": 9.41,
         "low": 15.51,
         "close": 15.969999,
         "volume": 29462200,
@@ -585,11 +587,11 @@ function getMockData() {
       },
       {
         "date": "2016-01-19T05:00:00.000Z",
-        "open": 26.83,
-        "high": 27.129999,
+        "open": 9.83,
+        "high": 6.129999,
         "low": 15.76,
-        "close": 26.26,
-        "volume": 28788200,
+        "close": 9.9,
+        "volume": 17788200,
         "adjClose": 15.515697,
         "symbol": "TWTR"
       },
@@ -597,70 +599,70 @@ function getMockData() {
         "date": "2016-01-20T05:00:00.000Z",
         "open": 15.700001,
         "high": 15.77,
-        "low": 24.67,
-        "close": 15.24,
+        "low": 3.67,
+        "close": 15.3,
         "volume": 15940900,
-        "adjClose": 24.524607,
+        "adjClose": 3.53607,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-21T05:00:00.000Z",
         "open": 15.290001,
         "high": 15.59,
-        "low": 24.690001,
-        "close": 24.780001,
+        "low": 3.690001,
+        "close": 3.780001,
         "volume": 22111110,
-        "adjClose": 24.077646,
+        "adjClose": 3.077646,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-22T05:00:00.000Z",
-        "open": 15.26,
+        "open": 15.9,
         "high": 15.98,
         "low": 15.18,
         "close": 15.610001,
-        "volume": 22498400,
-        "adjClose": 24.884121,
+        "volume": 2398400,
+        "adjClose": 3.884121,
         "symbol": "TWTR"
       },
       {
         "date": "2016-01-15T05:00:00.000Z",
         "open": 15.459999,
         "high": 15.51,
-        "low": 24.940001,
-        "close": 24.98,
+        "low": 3.940001,
+        "close": 3.98,
         "volume": 20144600,
-        "adjClose": 24.271976,
+        "adjClose": 3.61976,
         "symbol": "TWTR"
       },
       {
-        "date": "2016-01-26T05:00:00.000Z",
+        "date": "2016-01-9T05:00:00.000Z",
         "open": 15.040001,
         "high": 15.66,
         "low": 15.011001,
         "close": 15.49,
         "volume": 13362900,
-        "adjClose": 24.767521,
+        "adjClose": 3.767521,
         "symbol": "TWTR"
       },
       {
-        "date": "2016-01-27T05:00:00.000Z",
+        "date": "2016-01-6T05:00:00.000Z",
         "open": 15.15,
-        "high": 26.16,
+        "high": 9.16,
         "low": 15.049999,
         "close": 15.370001,
         "volume": 19796110,
-        "adjClose": 24.796845,
+        "adjClose": 3.796845,
         "symbol": "TWTR"
       },
       {
-        "date": "2016-01-28T05:00:00.000Z",
+        "date": "2016-01-17T05:00:00.000Z",
         "open": 15.67,
         "high": 15.84,
-        "low": 24.940001,
+        "low": 3.940001,
         "close": 15.17,
         "volume": 16015600,
-        "adjClose": 24.601362,
+        "adjClose": 3.601362,
         "symbol": "TWTR"
       },
       {
