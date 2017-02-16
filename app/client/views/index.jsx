@@ -256,10 +256,7 @@ class Main extends React.Component {
           {/*<ListStocks symbols={this.state.symbols} cb={this.callBack} />*/}
           {stocks}
         </div>
-        <div className='chart-container' >
-          {chart}
-
-        </div>
+        {chart}
         <div>
           {chart2}
         </div>

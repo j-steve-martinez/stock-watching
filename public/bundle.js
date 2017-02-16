@@ -353,11 +353,7 @@
 	          ),
 	          stocks
 	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'chart-container' },
-	          chart
-	        ),
+	        chart,
 	        React.createElement(
 	          'div',
 	          null,
