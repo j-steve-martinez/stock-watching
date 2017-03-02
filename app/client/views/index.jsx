@@ -222,7 +222,7 @@ class Main extends React.Component {
       // console.log('setting chart to LineAndScatterChart');
       // chart = <MyChart historical={this.state.historical} />;
       var ratio = 1;
-      var width = 600;
+      var width = 1000;
       var type = "svg"
       /**
        * LineAndScatterChart only accepts an array
@@ -249,6 +249,7 @@ class Main extends React.Component {
         <div>
           {/*<GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />*/}
           {quotes}
+          
           <form>
             <input type="text" id="echo" placeholder="Enter a Stock Symbol" />
             <button type="submit" className='btn btn-success btn-sm' onClick={this.handleClick}>Enter</button>
@@ -256,6 +257,7 @@ class Main extends React.Component {
           {/*<ListStocks symbols={this.state.symbols} cb={this.callBack} />*/}
           {stocks}
         </div>
+        <FilterData data={this.state.historical}/>
         {chart}
         <div>
           {chart2}
@@ -398,6 +400,41 @@ const GetQuote = React.createClass({
       this.getData([this.props.symbol]);
     }
     return (null);
+  }
+});
+
+const FilterData = React.createClass({
+  filter(e) {
+    console.log('FilterData filter');
+    console.log(e.target.id);
+  },
+  render() {
+    console.log(this.props);
+    var labels = [1, 3, 6, 'YTD'];
+
+    var list = labels.map((value, key) => {
+      var label;
+      if (typeof value === 'number') {
+        label = value + "M";
+      } else {
+        label = value;
+      }
+
+      return (
+        <button
+          onClick={this.filter}
+          id={value}
+          key={key}
+          className="btn btn-xs btn-default filter">
+          {label}
+        </button>
+      )
+    });
+    return (
+      <div>
+        {list}
+      </div>
+    );
   }
 });
 
