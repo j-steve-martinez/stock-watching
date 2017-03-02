@@ -204,7 +204,7 @@ class Main extends React.Component {
     console.log('Main this.state');
     console.log(this.state);
 
-    var quotes, stocks, chart, chart2;
+    var quotes, stocks, chart, chart2, data = [];
 
     if (this.state === null || this.state.symbols.length === 0) {
       quotes = null;
@@ -221,19 +221,19 @@ class Main extends React.Component {
     } else {
       // console.log('setting chart to LineAndScatterChart');
       // chart = <MyChart historical={this.state.historical} />;
-      var ratio = 1;
-      var width = 1000;
-      var type = "svg"
+      // var ratio = 1;
+      // var width = 1000;
+      // var type = "svg"
       /**
        * LineAndScatterChart only accepts an array
        *  so put the object into and array
        */
-      var data = [this.state.historical];
-      chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
+      data = [this.state.historical];
+      // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
       // chart = <CandleStickChartWithMA data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
       // chart = <StockChart data={data} type={type} ratio={ratio} width={width} />
       // chart2 = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-      chart2 = null
+
       // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
     }
 
@@ -249,7 +249,7 @@ class Main extends React.Component {
         <div>
           {/*<GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />*/}
           {quotes}
-          
+
           <form>
             <input type="text" id="echo" placeholder="Enter a Stock Symbol" />
             <button type="submit" className='btn btn-success btn-sm' onClick={this.handleClick}>Enter</button>
@@ -257,11 +257,8 @@ class Main extends React.Component {
           {/*<ListStocks symbols={this.state.symbols} cb={this.callBack} />*/}
           {stocks}
         </div>
-        <FilterData data={this.state.historical}/>
-        {chart}
-        <div>
-          {chart2}
-        </div>
+        <FilterData data={data} />
+        {/*{chart}*/}
       </div>
     )
   }
@@ -404,15 +401,26 @@ const GetQuote = React.createClass({
 });
 
 const FilterData = React.createClass({
+  getInitialState(){
+    var data;
+    if (this.props.data !== null) {
+      data = this.props.data;
+    } else {
+      data === null;
+    }
+    return {data : data};
+  },
   filter(e) {
     console.log('FilterData filter');
     console.log(e.target.id);
   },
   render() {
-    console.log(this.props);
-    var labels = [1, 3, 6, 'YTD'];
+    console.log('FilterData render');
+    console.log(this.state);
+    var labels = [1, 3, 6, 'YTD'],
+      chart, list;
 
-    var list = labels.map((value, key) => {
+    list = labels.map((value, key) => {
       var label;
       if (typeof value === 'number') {
         label = value + "M";
@@ -430,9 +438,27 @@ const FilterData = React.createClass({
         </button>
       )
     });
+
+    if (this.props.data === null || this.props.data.length === 0) {
+      console.log('null chart');
+      chart = null;
+    } else {
+      // chart = <div>chart</div>
+      var ratio = 1;
+      var width = 1000;
+      var type = "svg"
+      /**
+       * LineAndScatterChart only accepts an array
+       *  so put the object into and array
+       */
+      var data = this.props.data;
+      chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
+    }
+
     return (
       <div>
         {list}
+        {chart}
       </div>
     );
   }

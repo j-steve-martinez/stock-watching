@@ -29,11 +29,11 @@ class LineAndScatterChart extends React.Component {
 		// console.log(myLine);
 
 		data = data[0];
-		// console.log('data');
-		// console.log(data);
+		console.log('data');
+		console.log(data);
 		keys = Object.keys(data);
-		// console.log("KEYS: ");
-		// console.log(keys);
+		console.log("KEYS: ");
+		console.log(keys);
 		var len = data[keys[0]].length;
 		// console.log(len);
 		for (var i = 0; i < len; i++) {
