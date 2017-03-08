@@ -52,14 +52,6 @@
 
 	var _LineAndScatterChart2 = _interopRequireDefault(_LineAndScatterChart);
 
-	var _CandleStickChartWithMA = __webpack_require__(334);
-
-	var _CandleStickChartWithMA2 = _interopRequireDefault(_CandleStickChartWithMA);
-
-	var _StockChart = __webpack_require__(335);
-
-	var _StockChart2 = _interopRequireDefault(_StockChart);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -70,6 +62,9 @@
 
 	var React = __webpack_require__(2);
 	var ReactDOM = __webpack_require__(179);
+
+	// import CandleStickChartWithMA from './CandleStickChartWithMA.jsx';
+	// import StockChart from './StockChart.jsx';
 
 	// if sass build fails
 	// npm update
@@ -287,7 +282,6 @@
 	      var quotes,
 	          stocks,
 	          chart,
-	          chart2,
 	          data = null;
 
 	      if (this.state === null || this.state.symbols.length === 0) {
@@ -301,7 +295,6 @@
 	      if (this.state === null || this.state.historical.length === 0) {
 	        // console.log('setting chart to null');
 	        chart = null;
-	        chart2 = null;
 	      } else {
 	        // console.log('setting chart data');
 	        /**
@@ -402,14 +395,29 @@
 	  getData: function getData(symbols) {
 	    var _this5 = this;
 
-	    // console.log('GetQuote getData');
-	    // console.log(symbols);
+	    console.log('GetQuote getData');
+	    console.log(symbols);
 
 	    var url,
 	        data = {},
 	        header = {};
+	    var date = new Date();
+	    var day = date.getDate();
+	    var month = date.getMonth() + 1;
+	    var startYear = date.getFullYear() - 1;
+	    var endYear = date.getFullYear();
+	    if (day < 10) {
+	      day = '0' + day;
+	    }
+	    if (month < 10) {
+	      month = '0' + month;
+	    }
+	    var start = startYear + '-' + month + '-' + day;
+	    var end = endYear + '-' + month + '-' + day;
+	    var dates = { start: start, end: end };
 
-	    data = { symbols: symbols };
+	    data = { symbols: symbols, dates: dates };
+	    console.log(data);
 	    url = window.location.origin + '/api/quotes';
 	    header.url = url;
 	    header.method = 'POST';
@@ -422,19 +430,20 @@
 	    /**
 	     * Get data from server
 	     */
-	    // $.ajax(header).then(results => {
-	    //   console.log('GetQuote got historical');
-	    //   console.log(results);
-	    //   this.props.cb('historical', results);
-	    // });
+	    $.ajax(header).then(function (results) {
+	      console.log('GetQuote got historical');
+	      console.log(results);
+	      _this5.props.cb('historical', results);
+	    });
 
 	    /**
 	     * Using Mock Data
 	     */
-	    setTimeout(function () {
-	      var results = getMockData();
-	      _this5.props.cb('historical', results);
-	    }, 1000);
+	    // setTimeout(() => {
+	    //   var results = getMockData();
+	    //   this.props.cb('historical', results);
+	    // }, 1000)
+
 	  },
 	  componentWillMount: function componentWillMount() {
 	    // console.log('getQuote componentWillMount');
@@ -518,6 +527,8 @@
 	       *  so put the object into and array
 	       */
 	      var data = this.props.data;
+	      console.log('filtered data');
+	      console.log(data);
 	      chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type, ratio: ratio, width: width });
 	    }
 
@@ -653,7 +664,7 @@
 	function getMockData() {
 
 	  var mockData = {
-	    "TWTR": [{
+	    "TWEEkeTR": [{
 	      "date": "2016-01-04T05:00:00.000Z",
 	      "open": 11.700001,
 	      "high": 18.52,
@@ -54250,364 +54261,6 @@
 	};
 
 	exports.default = Brush;
-
-/***/ },
-/* 334 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _d3Format = __webpack_require__(33);
-
-	var _d3TimeFormat = __webpack_require__(34);
-
-	var _reactStockcharts = __webpack_require__(36);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var CandlestickSeries = _reactStockcharts.series.CandlestickSeries,
-	    BarSeries = _reactStockcharts.series.BarSeries,
-	    LineSeries = _reactStockcharts.series.LineSeries,
-	    AreaSeries = _reactStockcharts.series.AreaSeries;
-	var discontinuousTimeScaleProvider = _reactStockcharts.scale.discontinuousTimeScaleProvider;
-	var CrossHairCursor = _reactStockcharts.coordinates.CrossHairCursor,
-	    MouseCoordinateX = _reactStockcharts.coordinates.MouseCoordinateX,
-	    MouseCoordinateY = _reactStockcharts.coordinates.MouseCoordinateY,
-	    CurrentCoordinate = _reactStockcharts.coordinates.CurrentCoordinate;
-	var OHLCTooltip = _reactStockcharts.tooltip.OHLCTooltip,
-	    MovingAverageTooltip = _reactStockcharts.tooltip.MovingAverageTooltip;
-	var XAxis = _reactStockcharts.axes.XAxis,
-	    YAxis = _reactStockcharts.axes.YAxis;
-	var ema = _reactStockcharts.indicator.ema,
-	    sma = _reactStockcharts.indicator.sma,
-	    change = _reactStockcharts.indicator.change;
-	var fitWidth = _reactStockcharts.helper.fitWidth,
-	    TypeChooser = _reactStockcharts.helper.TypeChooser;
-
-	var CandleStickChartWithMA = function (_React$Component) {
-		_inherits(CandleStickChartWithMA, _React$Component);
-
-		function CandleStickChartWithMA() {
-			_classCallCheck(this, CandleStickChartWithMA);
-
-			return _possibleConstructorReturn(this, (CandleStickChartWithMA.__proto__ || Object.getPrototypeOf(CandleStickChartWithMA)).apply(this, arguments));
-		}
-
-		_createClass(CandleStickChartWithMA, [{
-			key: "render",
-			value: function render() {
-				var _props = this.props,
-				    data = _props.data,
-				    type = _props.type,
-				    width = _props.width,
-				    ratio = _props.ratio;
-
-				var parseTime = (0, _d3TimeFormat.timeParse)("%Y-%m-%dT%H:%M:%S.%LZ");
-
-				console.log(data);
-				console.log(parseTime);
-
-				var symbol = data[0].symbol;
-				data.forEach(function (d) {
-					console.log(d.date);
-					d.date = parseTime(d.date);
-					d.open = +d.open;
-					d.high = +d.high;
-					d.low = +d.low;
-					d.close = +d.close;
-					d.volume = +d.volume;
-				});
-
-				console.log(data);
-				var test = { ms: 'MS' };
-				test.ms;
-
-				test.ms = change()
-				// .windowSize(20)
-				.sourcePath("close").merge(function (d, c) {
-					d.low = c;
-				}).accessor(function (d) {
-					return d.close;
-				}).stroke("blue").fill("blue");
-				console.log(test.ms);
-				var ema20 = ema().windowSize(20) // optional will default to 10
-				.sourcePath("close") // optional will default to close as the source
-				.skipUndefined(true) // defaults to true
-				.merge(function (d, c) {
-					d.open = c;
-				}) // Required, if not provided, log a error
-				.accessor(function (d) {
-					return d.open;
-				}) // Required, if not provided, log an error during calculation
-				.stroke("blue"); // Optional
-
-				var sma20 = sma().windowSize(20).sourcePath("low").merge(function (d, c) {
-					d.low = c;
-				}).accessor(function (d) {
-					return d.low;
-				}).stroke("yellow").fill("yellow");
-
-				var ema50 = ema().windowSize(50).sourcePath("high").merge(function (d, c) {
-					d.high = c;
-				}).accessor(function (d) {
-					return d.high;
-				}).stroke("red").fill("red");
-
-				var smaVolume50 = sma().windowSize(50).sourcePath("volume").merge(function (d, c) {
-					d.volume = c;
-				}).accessor(function (d) {
-					return d.volume;
-				}).stroke("green").fill("green");
-				var test2 = [test.ms.accessor(), sma20.accessor(), ema20.accessor(), ema50.accessor()];
-				return _react2.default.createElement(
-					_reactStockcharts.ChartCanvas,
-					{ ratio: ratio, width: width, height: 400,
-						margin: { left: 70, right: 70, top: 10, bottom: 30 },
-						type: type,
-						seriesName: "All Stock",
-						data: data,
-						calculator: [test.ms, sma20, ema20, ema50, smaVolume50],
-						xAccessor: function xAccessor(d) {
-							return d.date;
-						}, xScaleProvider: discontinuousTimeScaleProvider,
-						xExtents: [new Date(2016, 0, 1), new Date(2016, 0, 29)] },
-					_react2.default.createElement(
-						_reactStockcharts.Chart,
-						{ id: 1,
-							yExtents: [function (d) {
-								return [d.high, d.low];
-							}, test2],
-							padding: { top: 100, bottom: 50 } },
-						_react2.default.createElement(XAxis, { axisAt: "bottom", orient: "bottom" }),
-						_react2.default.createElement(YAxis, { axisAt: "right", orient: "right", ticks: 5 }),
-						_react2.default.createElement(MouseCoordinateY, {
-							at: "right",
-							orient: "right",
-							displayFormat: (0, _d3Format.format)(".2f") }),
-						_react2.default.createElement(LineSeries, { yAccessor: test.ms.accessor(), stroke: test.ms.stroke() }),
-						_react2.default.createElement(CurrentCoordinate, { yAccessor: test.ms.accessor(), fill: test.ms.stroke() }),
-						_react2.default.createElement(OHLCTooltip, { origin: [-40, 0] }),
-						_react2.default.createElement(MovingAverageTooltip, { onClick: function onClick(e) {
-								return console.log(e);
-							}, origin: [-38, 15],
-							calculators: [test.ms, sma20, ema20, ema50] })
-					)
-				);
-			}
-		}]);
-
-		return CandleStickChartWithMA;
-	}(_react2.default.Component);
-
-	CandleStickChartWithMA.propTypes = {
-		data: _react2.default.PropTypes.array.isRequired,
-		width: _react2.default.PropTypes.number.isRequired,
-		ratio: _react2.default.PropTypes.number.isRequired,
-		type: _react2.default.PropTypes.oneOf(["svg", "hybrid"]).isRequired
-	};
-
-	CandleStickChartWithMA.defaultProps = {
-		type: "svg"
-	};
-
-	CandleStickChartWithMA = fitWidth(CandleStickChartWithMA);
-
-	exports.default = CandleStickChartWithMA;
-
-/***/ },
-/* 335 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(2);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _d3Format = __webpack_require__(33);
-
-	var _d3TimeFormat = __webpack_require__(34);
-
-	var _reactStockcharts = __webpack_require__(36);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var CandlestickSeries = _reactStockcharts.series.CandlestickSeries,
-	    BarSeries = _reactStockcharts.series.BarSeries,
-	    LineSeries = _reactStockcharts.series.LineSeries,
-	    AreaSeries = _reactStockcharts.series.AreaSeries;
-	var discontinuousTimeScaleProvider = _reactStockcharts.scale.discontinuousTimeScaleProvider;
-	var CrossHairCursor = _reactStockcharts.coordinates.CrossHairCursor,
-	    MouseCoordinateX = _reactStockcharts.coordinates.MouseCoordinateX,
-	    MouseCoordinateY = _reactStockcharts.coordinates.MouseCoordinateY,
-	    CurrentCoordinate = _reactStockcharts.coordinates.CurrentCoordinate;
-	var OHLCTooltip = _reactStockcharts.tooltip.OHLCTooltip,
-	    MovingAverageTooltip = _reactStockcharts.tooltip.MovingAverageTooltip;
-	var XAxis = _reactStockcharts.axes.XAxis,
-	    YAxis = _reactStockcharts.axes.YAxis;
-	var ema = _reactStockcharts.indicator.ema,
-	    sma = _reactStockcharts.indicator.sma;
-	var fitWidth = _reactStockcharts.helper.fitWidth,
-	    TypeChooser = _reactStockcharts.helper.TypeChooser;
-
-	var StockChart = function (_React$Component) {
-	    _inherits(StockChart, _React$Component);
-
-	    function StockChart() {
-	        _classCallCheck(this, StockChart);
-
-	        return _possibleConstructorReturn(this, (StockChart.__proto__ || Object.getPrototypeOf(StockChart)).apply(this, arguments));
-	    }
-
-	    _createClass(StockChart, [{
-	        key: "render",
-	        value: function render() {
-	            var _props = this.props,
-	                data = _props.data,
-	                type = _props.type,
-	                width = _props.width,
-	                ratio = _props.ratio,
-	                parseTime = (0, _d3TimeFormat.timeParse)("%Y-%m-%dT%H:%M:%S.%LZ"),
-	                keys,
-	                chart,
-	                hist = [],
-	                indicators = {};
-
-
-	            data = data[0];
-	            console.log('data');
-	            console.log(data);
-	            keys = Object.keys(data);
-	            console.log("KEYS: ");
-	            console.log(keys);
-	            var len = data[keys[0]].length;
-	            console.log(len);
-	            for (var i = 0; i < len; i++) {
-	                var day = {};
-	                // console.log("The number is " + i);
-	                keys.forEach(function (name) {
-	                    // console.log(name);
-	                    // console.log(data[name][i]);
-
-	                    /**
-	                     * Set the symbol close
-	                     */
-	                    day[name] = +data[name][i].close;
-
-	                    /**
-	                     * Set the high for the y axis
-	                     */
-	                    if (day.high === undefined || day.high < data[name][i].high) {
-	                        day.high = data[name][i].high;
-	                    }
-
-	                    /**
-	                     * Set the low for the y axis
-	                     */
-	                    if (day.low === undefined || day.low > data[name][i].low) {
-	                        day.low = data[name][i].low;
-	                    }
-
-	                    /**
-	                     * Set the close for testing
-	                     */
-	                    if (day.close === undefined) {
-	                        day.close = +data[name][i].close;
-	                    }
-
-	                    /**
-	                     * Set the date for the x axis ticks
-	                     */
-	                    if (day.date === undefined) {
-	                        day.date = parseTime(data[name][i].date);
-	                    }
-	                });
-	                // console.log(day.date);
-	                // console.log(day);
-	                hist.push(day);
-	            }
-	            console.log(hist);
-
-	            /**
-	             * Create an object to hold the indicator functions
-	             *  use the key name as the function placeholders
-	             */
-	            keys.forEach(function (value) {
-	                indicators[value] = value;
-	            });
-	            console.log(indicators);
-
-	            return null;
-	        }
-	    }]);
-
-	    return StockChart;
-	}(_react2.default.Component);
-
-	function mkInd() {
-	    console.log(mkInd);
-	}
-
-	StockChart.propTypes = {
-	    data: _react2.default.PropTypes.array.isRequired,
-	    width: _react2.default.PropTypes.number.isRequired,
-	    ratio: _react2.default.PropTypes.number.isRequired,
-	    type: _react2.default.PropTypes.oneOf(["svg", "hybrid"]).isRequired
-	};
-
-	StockChart.defaultProps = {
-	    type: "svg"
-	};
-
-	StockChart = fitWidth(StockChart);
-
-	exports.default = StockChart;
-
-	/*
-	<SingleValueTooltip
-	    yAccessor={d => d.AAPLClose}
-	    yLabel="AAPL"
-	    yDisplayFormat={d3.format(".2f")}
-	    valueStroke="#ff7f0e"
-	    labelStroke="#4682B4" - optional prop
-	    origin={[-40, 20]}/>
-
-	<SingleValueTooltip
-	    yAccessor={d => d.SP500Close}
-	    yLabel="S&P 500"
-	    yDisplayFormat={d3.format(".2f")}
-	    valueStroke="#2ca02c"
-	    labelStroke="#4682B4" - optional prop
-	    origin={[-40, 35]}/>
-	*/
 
 /***/ }
 /******/ ]);

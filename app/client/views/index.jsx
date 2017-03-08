@@ -3,8 +3,8 @@ var React = require('react');
 var ReactDOM = require('react-dom');
 
 import LineAndScatterChart from './LineAndScatterChart.jsx';
-import CandleStickChartWithMA from './CandleStickChartWithMA.jsx';
-import StockChart from './StockChart.jsx';
+// import CandleStickChartWithMA from './CandleStickChartWithMA.jsx';
+// import StockChart from './StockChart.jsx';
 
 // if sass build fails
 // npm update
@@ -204,7 +204,7 @@ class Main extends React.Component {
     console.log('Main this.state');
     console.log(this.state);
 
-    var quotes, stocks, chart, chart2, data = null;
+    var quotes, stocks, chart, data = null;
 
     if (this.state === null || this.state.symbols.length === 0) {
       quotes = null;
@@ -217,7 +217,6 @@ class Main extends React.Component {
     if (this.state === null || this.state.historical.length === 0) {
       // console.log('setting chart to null');
       chart = null;
-      chart2 = null;
     } else {
       // console.log('setting chart data');
       /**
@@ -291,14 +290,29 @@ const ListStocks = React.createClass({
 
 const GetQuote = React.createClass({
   getData(symbols) {
-    // console.log('GetQuote getData');
-    // console.log(symbols);
+    console.log('GetQuote getData');
+    console.log(symbols);
 
     var url,
       data = {},
       header = {};
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var startYear = date.getFullYear() - 1;
+    var endYear = date.getFullYear();
+    if (day < 10) {
+      day = '0' + day;
+    }
+    if (month < 10) {
+      month = '0' + month;
+    }
+    var start = startYear + '-' + month + '-' + day;
+    var end = endYear + '-' + month + '-' + day;
+    var dates = { start: start, end: end };
 
-    data = { symbols: symbols };
+    data = { symbols: symbols, dates: dates };
+    console.log(data);
     url = window.location.origin + '/api/quotes';
     header.url = url;
     header.method = 'POST';
@@ -311,19 +325,19 @@ const GetQuote = React.createClass({
     /**
      * Get data from server
      */
-    // $.ajax(header).then(results => {
-    //   console.log('GetQuote got historical');
-    //   console.log(results);
-    //   this.props.cb('historical', results);
-    // });
+    $.ajax(header).then(results => {
+      console.log('GetQuote got historical');
+      console.log(results);
+      this.props.cb('historical', results);
+    });
 
     /**
      * Using Mock Data
      */
-    setTimeout(() => {
-      var results = getMockData();
-      this.props.cb('historical', results);
-    }, 1000)
+    // setTimeout(() => {
+    //   var results = getMockData();
+    //   this.props.cb('historical', results);
+    // }, 1000)
 
 
   },
@@ -406,6 +420,8 @@ const FilterData = React.createClass({
        *  so put the object into and array
        */
       var data = this.props.data;
+      console.log('filtered data');
+      console.log(data);
       chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
     }
 
@@ -498,7 +514,7 @@ ReactDOM.render(
 function getMockData() {
 
   var mockData = {
-    "TWTR": [
+    "TWEEkeTR": [
       {
         "date": "2016-01-04T05:00:00.000Z",
         "open": 11.700001,
