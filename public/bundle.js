@@ -288,7 +288,7 @@
 	          stocks,
 	          chart,
 	          chart2,
-	          data = [];
+	          data = null;
 
 	      if (this.state === null || this.state.symbols.length === 0) {
 	        quotes = null;
@@ -303,22 +303,12 @@
 	        chart = null;
 	        chart2 = null;
 	      } else {
-	        // console.log('setting chart to LineAndScatterChart');
-	        // chart = <MyChart historical={this.state.historical} />;
-	        // var ratio = 1;
-	        // var width = 1000;
-	        // var type = "svg"
+	        // console.log('setting chart data');
 	        /**
 	         * LineAndScatterChart only accepts an array
 	         *  so put the object into and array
 	         */
 	        data = [this.state.historical];
-	        // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-	        // chart = <CandleStickChartWithMA data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
-	        // chart = <StockChart data={data} type={type} ratio={ratio} width={width} />
-	        // chart2 = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-
-	        // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
 	      }
 
 	      return React.createElement(
@@ -410,6 +400,8 @@
 	var GetQuote = React.createClass({
 	  displayName: 'GetQuote',
 	  getData: function getData(symbols) {
+	    var _this5 = this;
+
 	    // console.log('GetQuote getData');
 	    // console.log(symbols);
 
@@ -426,59 +418,23 @@
 	    header.dataType = 'json';
 	    // console.log(header);
 
+
+	    /**
+	     * Get data from server
+	     */
+	    // $.ajax(header).then(results => {
+	    //   console.log('GetQuote got historical');
+	    //   console.log(results);
+	    //   this.props.cb('historical', results);
+	    // });
+
 	    /**
 	     * Using Mock Data
 	     */
-
-	    /**
-	    $.ajax(header).then(results => {
-	       // console.log('GetQuote got historical');
-	      // console.log(results);
-	      this.props.cb('historical', results);
-	     });
-	     */
-
-	    var results = getMockData();
-	    this.props.cb('historical', results);
-	    // console.log(test);
-
-	    /**
-	     * Format the data to display in chart
-	     */
-	    // var historicals, hist, symbol, start, end, low, high, data;
-	    // historicals = quote.historicals;
-	    // start = historicals[0].begins_at;
-	    // end = historicals[historicals.length - 1].begins_at;
-	    // // low = historicals.sort()[0]
-	    // symbol = quote.symbol;
-	    // hist = historicals.map((value)=>{
-	    //   return value.close_price;
-	    // });
-	    // data = {
-	    //   symbol : symbol,
-	    //   hist : hist,
-	    //   start : start,
-	    //   end : end
-	    // };
-	    // console.log(quote);
-	    // console.log(historicals);
-	    // console.log(hist.sort());
-	    // console.log(symbol);
-	    // console.log(start);
-	    // console.log(end);
-	    // console.log(data);
-	    // this.props.cb('historical', quote);
-	    /**
-	     * Uncomment later use mock data for now
-	     */
-	    // $.ajax({
-	    //   url: url,
-	    //   method: 'GET'//,
-	    //   dataType : 'json'
-	    // }).then(quote => {
-	    // console.log('Got Quote');
-	    // console.log(quote);
-	    // })
+	    setTimeout(function () {
+	      var results = getMockData();
+	      _this5.props.cb('historical', results);
+	    }, 1000);
 	  },
 	  componentWillMount: function componentWillMount() {
 	    // console.log('getQuote componentWillMount');
@@ -519,9 +475,12 @@
 	    console.log(e.target.id);
 	  },
 	  render: function render() {
-	    var _this5 = this;
+	    var _this6 = this;
 
 	    console.log('FilterData render');
+	    console.log('props');
+	    console.log(this.props);
+	    console.log('state');
 	    console.log(this.state);
 	    var labels = [1, 3, 6, 'YTD'],
 	        chart,
@@ -538,7 +497,7 @@
 	      return React.createElement(
 	        'button',
 	        {
-	          onClick: _this5.filter,
+	          onClick: _this6.filter,
 	          id: value,
 	          key: key,
 	          className: 'btn btn-xs btn-default filter' },

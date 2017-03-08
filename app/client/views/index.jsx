@@ -204,7 +204,7 @@ class Main extends React.Component {
     console.log('Main this.state');
     console.log(this.state);
 
-    var quotes, stocks, chart, chart2, data = [];
+    var quotes, stocks, chart, chart2, data = null;
 
     if (this.state === null || this.state.symbols.length === 0) {
       quotes = null;
@@ -219,22 +219,12 @@ class Main extends React.Component {
       chart = null;
       chart2 = null;
     } else {
-      // console.log('setting chart to LineAndScatterChart');
-      // chart = <MyChart historical={this.state.historical} />;
-      // var ratio = 1;
-      // var width = 1000;
-      // var type = "svg"
+      // console.log('setting chart data');
       /**
        * LineAndScatterChart only accepts an array
        *  so put the object into and array
        */
       data = [this.state.historical];
-      // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-      // chart = <CandleStickChartWithMA data={this.state.historical['TWTR']} type={type} ratio={ratio} width={width} />
-      // chart = <StockChart data={data} type={type} ratio={ratio} width={width} />
-      // chart2 = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-
-      // chart = <TypeChooser type="hybrid">{type => <LineAndScatterChart data={this.state.historical[0]} type={type} />}</TypeChooser>;
     }
 
     return (
@@ -247,18 +237,15 @@ class Main extends React.Component {
           </div>
         </div>
         <div>
-          {/*<GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />*/}
           {quotes}
-
           <form>
             <input type="text" id="echo" placeholder="Enter a Stock Symbol" />
             <button type="submit" className='btn btn-success btn-sm' onClick={this.handleClick}>Enter</button>
           </form>
-          {/*<ListStocks symbols={this.state.symbols} cb={this.callBack} />*/}
           {stocks}
         </div>
         <FilterData data={data} />
-        {/*{chart}*/}
+
       </div>
     )
   }
@@ -320,61 +307,25 @@ const GetQuote = React.createClass({
     header.dataType = 'json';
     // console.log(header);
 
+
+    /**
+     * Get data from server
+     */
+    // $.ajax(header).then(results => {
+    //   console.log('GetQuote got historical');
+    //   console.log(results);
+    //   this.props.cb('historical', results);
+    // });
+
     /**
      * Using Mock Data
      */
-
-    /**
-    $.ajax(header).then(results => {
-
-      // console.log('GetQuote got historical');
-      // console.log(results);
+    setTimeout(() => {
+      var results = getMockData();
       this.props.cb('historical', results);
+    }, 1000)
 
-    });
-     */
 
-    var results = getMockData();
-    this.props.cb('historical', results);
-    // console.log(test);
-
-    /**
-     * Format the data to display in chart
-     */
-    // var historicals, hist, symbol, start, end, low, high, data;
-    // historicals = quote.historicals;
-    // start = historicals[0].begins_at;
-    // end = historicals[historicals.length - 1].begins_at;
-    // // low = historicals.sort()[0]
-    // symbol = quote.symbol;
-    // hist = historicals.map((value)=>{
-    //   return value.close_price;
-    // });
-    // data = {
-    //   symbol : symbol,
-    //   hist : hist,
-    //   start : start,
-    //   end : end
-    // };
-    // console.log(quote);
-    // console.log(historicals);
-    // console.log(hist.sort());
-    // console.log(symbol);
-    // console.log(start);
-    // console.log(end);
-    // console.log(data);
-    // this.props.cb('historical', quote);
-    /**
-     * Uncomment later use mock data for now
-     */
-    // $.ajax({
-    //   url: url,
-    //   method: 'GET'//,
-    //   dataType : 'json'
-    // }).then(quote => {
-    // console.log('Got Quote');
-    // console.log(quote);
-    // })
   },
   componentWillMount() {
     // console.log('getQuote componentWillMount');
@@ -401,14 +352,14 @@ const GetQuote = React.createClass({
 });
 
 const FilterData = React.createClass({
-  getInitialState(){
+  getInitialState() {
     var data;
     if (this.props.data !== null) {
       data = this.props.data;
     } else {
       data === null;
     }
-    return {data : data};
+    return { data: data };
   },
   filter(e) {
     console.log('FilterData filter');
@@ -416,6 +367,9 @@ const FilterData = React.createClass({
   },
   render() {
     console.log('FilterData render');
+    console.log('props');
+    console.log(this.props);
+    console.log('state');
     console.log(this.state);
     var labels = [1, 3, 6, 'YTD'],
       chart, list;
