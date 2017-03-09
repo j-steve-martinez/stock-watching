@@ -418,19 +418,19 @@ const FilterData = React.createClass({
       // console.log(start);
       switch (filter) {
         case '1':
-          console.log('one month');
+          // console.log('one month');
           duration = day * 30;
           break;
         case '3':
-          console.log('3 months');
+          // console.log('3 months');
           duration = day * 90;
           break;
         case '6':
-          console.log('six months');
+          // console.log('six months');
           duration = day * 180;
           break;
         case 'YTD':
-          console.log('Year To Date');
+          // console.log('Year To Date');
           break;
         default:
           break;
@@ -503,19 +503,20 @@ const FilterData = React.createClass({
       chart = null;
     } else {
       // console.log('LineAndScatterChart');
-      // chart = <div>chart</div>
+
       var ratio = 1;
       var width = 1000;
       var type = "svg"
+
       /**
        * Use the filtered data
        */
-      var filtered = this.filter();
-      var data = filtered;
-      console.log('filtered data');
-      console.log(data);
+      var data = this.filter();
+
+      // console.log('filtered data');
+      // console.log(data);
+
       chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-      // this.setState({data : data});
     }
 
     return (

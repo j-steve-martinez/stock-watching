@@ -621,8 +621,8 @@
 	       */
 	      var filtered = this.filter();
 	      var data = filtered;
-	      console.log('filtered data');
-	      console.log(data);
+	      // console.log('filtered data');
+	      // console.log(data);
 	      chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type, ratio: ratio, width: width });
 	      // this.setState({data : data});
 	    }
