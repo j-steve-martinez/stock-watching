@@ -452,7 +452,7 @@ const FilterData = React.createClass({
             // console.log(value);
             return value;
           }
-          
+
         });
         // console.log(tmp);
         newObj[value] = tmp;
@@ -504,8 +504,8 @@ const FilterData = React.createClass({
     } else {
       // console.log('LineAndScatterChart');
 
-      var ratio = 1;
-      var width = 1000;
+      // var ratio = 1;
+      // var width = 1000;
       var type = "svg"
 
       /**
@@ -515,8 +515,8 @@ const FilterData = React.createClass({
 
       // console.log('filtered data');
       // console.log(data);
-
-      chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
+      // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
+      chart = <LineAndScatterChart data={data} type={type} />
     }
 
     return (

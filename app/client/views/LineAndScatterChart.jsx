@@ -18,8 +18,8 @@ var { fitWidth, TypeChooser } = helper;
 class LineAndScatterChart extends React.Component {
 	render() {
 		// console.log('LineAndScatterChart render');
-		var { data, type, width, ratio } = this.props,
-			parseTime = timeParse("%Y-%m-%dT%H:%M:%S.%LZ"),
+		var { data, type, width, ratio } = this.props;
+		var	parseTime = timeParse("%Y-%m-%dT%H:%M:%S.%LZ"),
 			date, keys, chart, hist = [];
 		/**
  		 * Testing setting properties
@@ -113,7 +113,7 @@ class LineAndScatterChart extends React.Component {
 
 		return (
 			<ChartCanvas ratio={ratio} width={width} height={400}
-				margin={{ left: 70, right: 70, top: 20, bottom: 30 }}
+				margin={{ left: 15, right: 60, top: 20, bottom: 30 }}
 				type={type}
 				pointsPerPxThreshold={1}
 				seriesName="MSFT"

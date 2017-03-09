@@ -613,8 +613,8 @@
 	    } else {
 	      // console.log('LineAndScatterChart');
 
-	      var ratio = 1;
-	      var width = 1000;
+	      // var ratio = 1;
+	      // var width = 1000;
 	      var type = "svg";
 
 	      /**
@@ -624,8 +624,8 @@
 
 	      // console.log('filtered data');
 	      // console.log(data);
-
-	      chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type, ratio: ratio, width: width });
+	      // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
+	      chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type });
 	    }
 
 	    return React.createElement(
@@ -822,8 +822,9 @@
 				    data = _props.data,
 				    type = _props.type,
 				    width = _props.width,
-				    ratio = _props.ratio,
-				    parseTime = (0, _d3TimeFormat.timeParse)("%Y-%m-%dT%H:%M:%S.%LZ"),
+				    ratio = _props.ratio;
+
+				var parseTime = (0, _d3TimeFormat.timeParse)("%Y-%m-%dT%H:%M:%S.%LZ"),
 				    date,
 				    keys,
 				    chart,
@@ -920,7 +921,7 @@
 				return _react2.default.createElement(
 					_reactStockcharts.ChartCanvas,
 					{ ratio: ratio, width: width, height: 400,
-						margin: { left: 70, right: 70, top: 20, bottom: 30 },
+						margin: { left: 15, right: 60, top: 20, bottom: 30 },
 						type: type,
 						pointsPerPxThreshold: 1,
 						seriesName: "MSFT",
