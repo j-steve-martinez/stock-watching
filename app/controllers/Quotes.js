@@ -1,10 +1,12 @@
 'use strict';
 
 var yahooFinance = require('yahoo-finance');
-// var fs = require('fs');
-// var twtr = 'twtr.json'
-var twtr = require("../../twtr.json");
-// console.log(twtr);
+/**
+ * For dev only remove later
+ */
+var fs = require('fs');
+var data = require("../../data.json");
+
 function Quotes() {
     this.history = (req, res) => {
 
@@ -12,7 +14,7 @@ function Quotes() {
             /**
              * Use saved twtr data for dev
              */
-            res.send(twtr);
+            res.send(data);
 
             /**
              * Remove yahooFinance call until client is working better
@@ -22,7 +24,7 @@ function Quotes() {
             // var data = JSON.parse(body);
             // var dates = data.dates;
 
-            // console.log(data.dates);
+            // console.log(data);
             // yahooFinance.historical({
             //     symbols: data.symbols,
             //     from: dates.start,
@@ -40,7 +42,6 @@ function Quotes() {
             //     //     if (err) {
             //     //         return console.log(err);
             //     //     }
-            //     //     // res.send('The file was saved!');
             //     // });
             //     res.send(result);
 
