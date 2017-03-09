@@ -29,8 +29,11 @@ form {
   padding-bottom: 20px; }
 
 .btn {
-  margin-top: 5px;
   margin-right: 5px; }
+
+.dates {
+  float: right;
+  margin-right: 60px; }
 
 .navbar-default {
   background-color: #337AB7;

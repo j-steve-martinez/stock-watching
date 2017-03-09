@@ -355,7 +355,7 @@
 	            React.createElement('input', { type: 'text', id: 'echo', placeholder: 'Enter a Stock Symbol' }),
 	            React.createElement(
 	              'button',
-	              { type: 'submit', className: 'btn btn-success btn-sm', onClick: this.handleClick },
+	              { type: 'submit', className: 'submit', onClick: this.handleClick },
 	              'Enter'
 	            )
 	          ),
@@ -556,7 +556,7 @@
 	        var tmp = data[value].filter(function (value, key) {
 	          var tmpDate = new Date(value.date);
 	          var diff = tmpDate - start;
-	          if (diff > 0) {
+	          if (diff >= 0) {
 	            // console.log(value);
 	            return value;
 	          }
@@ -586,7 +586,8 @@
 	    // console.log(this.state);
 	    var labels = [1, 3, 6, 'YTD'],
 	        chart,
-	        list;
+	        list,
+	        dates;
 
 	    list = labels.map(function (value, key) {
 	      var label;
@@ -610,6 +611,7 @@
 	    if (this.state.data === null || this.state.data.length === 0) {
 	      // console.log('null chart');
 	      chart = null;
+	      dates = null;
 	    } else {
 	      // console.log('LineAndScatterChart');
 
@@ -623,7 +625,31 @@
 	      var data = this.filter();
 
 	      // console.log('filtered data');
-	      // console.log(data);
+	      // console.log(data[0][Object.keys(data[0])[0]].length);
+	      var end = data[0][Object.keys(data[0])[0]].length - 1;
+	      // console.log(data[0][Object.keys(data[0])[0]][0].date);
+	      var startDate = data[0][Object.keys(data[0])[0]][0].date.split('T')[0];
+	      // console.log(data[0][Object.keys(data[0])[0]][end].date);
+	      var endDate = data[0][Object.keys(data[0])[0]][end].date.split('T')[0];
+	      console.log(startDate.split('T')[0]);
+	      console.log(endDate);
+
+	      dates = React.createElement(
+	        'span',
+	        { className: 'dates' },
+	        React.createElement(
+	          'button',
+	          { className: 'btn btn-xs btn-success' },
+	          'Start: ',
+	          startDate
+	        ),
+	        React.createElement(
+	          'button',
+	          { className: 'btn btn-xs btn-danger' },
+	          'End: ',
+	          endDate
+	        )
+	      );
 	      // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
 	      chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type });
 	    }
@@ -631,7 +657,12 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      list,
+	      React.createElement(
+	        'div',
+	        null,
+	        list,
+	        dates
+	      ),
 	      chart
 	    );
 	  }

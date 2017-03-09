@@ -260,8 +260,9 @@ class Main extends React.Component {
           {quotes}
           <form>
             <input type="text" id="echo" placeholder="Enter a Stock Symbol" />
-            <button type="submit" className='btn btn-success btn-sm' onClick={this.handleClick}>Enter</button>
+            <button type="submit" className='submit' onClick={this.handleClick}>Enter</button>
           </form>
+          
           {stocks}
         </div>
         {chart}
@@ -448,7 +449,7 @@ const FilterData = React.createClass({
         var tmp = data[value].filter((value, key) => {
           var tmpDate = new Date(value.date);
           var diff = tmpDate - start;
-          if (diff > 0) {
+          if (diff >= 0) {
             // console.log(value);
             return value;
           }
@@ -477,7 +478,7 @@ const FilterData = React.createClass({
     // console.log('state');
     // console.log(this.state);
     var labels = [1, 3, 6, 'YTD'],
-      chart, list;
+      chart, list, dates;
 
     list = labels.map((value, key) => {
       var label;
@@ -501,6 +502,7 @@ const FilterData = React.createClass({
     if (this.state.data === null || this.state.data.length === 0) {
       // console.log('null chart');
       chart = null;
+      dates = null;
     } else {
       // console.log('LineAndScatterChart');
 
@@ -514,14 +516,31 @@ const FilterData = React.createClass({
       var data = this.filter();
 
       // console.log('filtered data');
-      // console.log(data);
+      // console.log(data[0][Object.keys(data[0])[0]].length);
+      var end = data[0][Object.keys(data[0])[0]].length - 1;
+      // console.log(data[0][Object.keys(data[0])[0]][0].date);
+      var startDate = data[0][Object.keys(data[0])[0]][0].date.split('T')[0];
+      // console.log(data[0][Object.keys(data[0])[0]][end].date);
+      var endDate = data[0][Object.keys(data[0])[0]][end].date.split('T')[0];
+      console.log(startDate.split('T')[0]);
+      console.log(endDate);
+
+      dates = (
+        <span className='dates'>
+          <button className="btn btn-xs btn-success">Start: {startDate}</button>
+          <button className="btn btn-xs btn-danger">End: {endDate}</button>
+        </span>
+      );
       // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
       chart = <LineAndScatterChart data={data} type={type} />
     }
 
     return (
       <div>
-        {list}
+        <div>
+          {list}
+          {dates}
+        </div>
         {chart}
       </div>
     );
