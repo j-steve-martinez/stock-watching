@@ -27,6 +27,7 @@ module.exports = function (app, passport, primus) {
 		 */
 		spark.on('data', function received(data) {
 			console.log(spark.id, 'received message:', data);
+			var sourceId = spark.id;
 			/**
 			 * Check to see if Stock is in database
 			 *  or add to database then run the for loop on primus
@@ -34,7 +35,7 @@ module.exports = function (app, passport, primus) {
 			var dataArr = data.split(':');
 			if (dataArr[0] === 'add') {
 				clickHandler.addStock(dataArr[1]);
-			} else	if (dataArr[0] === 'del') {
+			} else if (dataArr[0] === 'del') {
 				clickHandler.delStock(dataArr[1]);
 			}
 
@@ -43,9 +44,12 @@ module.exports = function (app, passport, primus) {
 			 */
 			primus.forEach(function (spark, id, connections) {
 
-				console.log('sending ' + data + ' to ' + spark.id);
+				if (sourceId !== spark.id) {
+					console.log('sending ' + data + ' to ' + spark.id);
 
-				spark.write(data);
+					spark.write(data);
+				}
+
 			});
 		});
 	});

@@ -130,9 +130,7 @@
 	      // console.log('handleClick')
 	      e.preventDefault();
 
-	      var message,
-	          symbol,
-
+	      var message, symbol, echo;
 	      /**
 	       * Get a reference to the html input
 	       */
@@ -144,9 +142,14 @@
 	      symbol = echo.value.toUpperCase();
 
 	      /**
-	       * Update the clients
+	       * Do nothing if the symbol already exists in the list
 	       */
-	      this.optimusPrime(symbol);
+	      if (this.state.symbols.indexOf(symbol) === -1) {
+	        /**
+	         * Update the clients
+	         */
+	        this.optimusPrime(symbol);
+	      }
 
 	      /**
 	       * Clear the current entry in the form;
@@ -273,6 +276,29 @@
 	      // console.log('Main componentDidMount');
 	      // console.log('state');
 	      // console.log(this.state);
+
+	      /**
+	       * Set the primus handler
+	       */
+	      var primus = new Primus();
+	      primus.on('data', function (data) {
+	        // console.log('primus new data: ' + data.split(':')[1]);
+	        var action = data.split(':')[0];
+	        var symbol = data.split(':')[1];
+	        var symbols = _this3.state.symbols;
+	        if (symbols.indexOf(symbol) === -1) {
+	          // add
+	          symbols.push(symbol);
+	        } else {
+	          // remove
+	          symbols = symbols.filter(function (value, key) {
+	            return value !== symbol;
+	          });
+	          symbol = "";
+	        }
+	        _this3.setState({ symbols: symbols, symbol: symbol });
+	      });
+
 	      /**
 	       * Get the symbols from the server
 	       */
@@ -287,10 +313,8 @@
 	        var symbols = list.map(function (value) {
 	          return value.name;
 	        });
-	        var primus = new Primus();
-	        // this.setState({ primus });
+
 	        _this3.setState({ symbols: symbols, symbol: "", primus: primus, historical: [] });
-	        //  this.setState({ symbols: symbols, symbol: "" });
 	      });
 	    }
 	  }, {
@@ -498,8 +522,8 @@
 	    }
 	  },
 	  clickH: function clickH(e) {
-	    console.log('FilterData filter');
-	    console.log(e.target.id);
+	    // console.log('FilterData filter');
+	    // console.log(e.target.id);
 	    /**
 	     * Get the last date to start calculations
 	     */
@@ -631,8 +655,8 @@
 	      var startDate = data[0][Object.keys(data[0])[0]][0].date.split('T')[0];
 	      // console.log(data[0][Object.keys(data[0])[0]][end].date);
 	      var endDate = data[0][Object.keys(data[0])[0]][end].date.split('T')[0];
-	      console.log(startDate.split('T')[0]);
-	      console.log(endDate);
+	      // console.log(startDate.split('T')[0]);
+	      // console.log(endDate);
 
 	      dates = React.createElement(
 	        'span',
