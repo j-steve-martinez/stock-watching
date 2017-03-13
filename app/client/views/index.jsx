@@ -164,30 +164,72 @@ class Main extends React.Component {
       this.state.primus.write(message);
 
       /**
-       * Update the app
+       * Get the data and filter out the deleted symbol then
+       * Update the App
        */
-      this.setState({ symbols: symbols, symbol: '' })
+      var historical = this.state.historical;
+      /**
+       * Get the filtered keys
+       */
+      var keys = Object.keys(historical).filter(value => {
+        return value !== symbol;
+      });
+      /**
+       * Make a new object with the filtered keys
+       */
+      var newObj = {};
+      keys.forEach(key => {
+        newObj[key] = historical[key];
+      });
+      // console.log('newObj');
+      // console.log(newObj);
+      // this.setState({ historical: historical, symbol : '' });
+      this.setState({ historical: newObj, symbols: symbols, symbol: '' })
     }
   }
 
   callBack(type, data) {
     // console.log('Main callBack called');
-    // console.log('type ' + type);
+    // console.log('type: ' + type);
     // console.log(data);
+    var historical, keys, key, value, newObj = {};
     /**
      * Possible type values:
+     * add
      * historical
      * del
      */
     switch (type) {
-      // case 'symbols':
-      //   this.setState({ symbols: data, symbol: '' })
-      //   break;
-      // case 'symbol':
-      //   this.setState({ symbol: data })
-      //   break;
+      case 'add':
+        /**
+         * Get the current data
+         */
+        historical = this.state.historical;
+        // console.log('historical');
+        // console.log(historical);
+
+        /**
+         * Get the property names
+         */
+        key = Object.keys(data)[0];
+
+        /**
+         * Get the data
+         */
+        value = data[key];
+        // console.log('key');
+        // console.log(key);
+        // console.log('value');
+        // console.log(value);
+
+        /**
+         * Add a new property with the data
+         */
+        historical[key] = value;
+        this.setState({ historical: historical, symbol: '' })
+        break;
       case 'historical':
-        this.setState({ historical: data, symbol: '' })
+        this.setState({ historical: data, symbol: '' });
         break;
       case 'del':
         this.optimusPrime(data);
@@ -337,8 +379,9 @@ const ListStocks = React.createClass({
 });
 
 const GetQuote = React.createClass({
-  getData(symbols) {
+  getData(symbols, type) {
     // console.log('GetQuote getData');
+    // console.log(type);
     // console.log(symbols);
 
     var url, dates,
@@ -363,7 +406,7 @@ const GetQuote = React.createClass({
     $.ajax(header).then(results => {
       // console.log('GetQuote got historical');
       // console.log(results);
-      this.props.cb('historical', results);
+      this.props.cb(type, results);
     });
 
     /**
@@ -382,7 +425,7 @@ const GetQuote = React.createClass({
      * TODO: For test only use the for loop when finished
      */
 
-    this.getData(this.props.symbols);
+    this.getData(this.props.symbols, 'historical');
 
   },
   render() {
@@ -394,7 +437,7 @@ const GetQuote = React.createClass({
     if (this.props.symbol !== '') {
       // console.log('mock get data');
       // var symbol = [this.props.symbol];
-      this.getData([this.props.symbol]);
+      this.getData([this.props.symbol], 'add');
     }
     return (null);
   }

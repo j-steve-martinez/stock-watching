@@ -232,29 +232,75 @@
 	        this.state.primus.write(message);
 
 	        /**
-	         * Update the app
+	         * Get the data and filter out the deleted symbol then
+	         * Update the App
 	         */
-	        this.setState({ symbols: symbols, symbol: '' });
+	        var historical = this.state.historical;
+	        /**
+	         * Get the filtered keys
+	         */
+	        var keys = Object.keys(historical).filter(function (value) {
+	          return value !== symbol;
+	        });
+	        /**
+	         * Make a new object with the filtered keys
+	         */
+	        var newObj = {};
+	        keys.forEach(function (key) {
+	          newObj[key] = historical[key];
+	        });
+	        // console.log('newObj');
+	        // console.log(newObj);
+	        // this.setState({ historical: historical, symbol : '' });
+	        this.setState({ historical: newObj, symbols: symbols, symbol: '' });
 	      }
 	    }
 	  }, {
 	    key: 'callBack',
 	    value: function callBack(type, data) {
 	      // console.log('Main callBack called');
-	      // console.log('type ' + type);
+	      // console.log('type: ' + type);
 	      // console.log(data);
+	      var historical,
+	          keys,
+	          key,
+	          value,
+	          newObj = {};
 	      /**
 	       * Possible type values:
+	       * add
 	       * historical
 	       * del
 	       */
 	      switch (type) {
-	        // case 'symbols':
-	        //   this.setState({ symbols: data, symbol: '' })
-	        //   break;
-	        // case 'symbol':
-	        //   this.setState({ symbol: data })
-	        //   break;
+	        case 'add':
+	          /**
+	           * Get the current data
+	           */
+	          historical = this.state.historical;
+	          // console.log('historical');
+	          // console.log(historical);
+
+	          /**
+	           * Get the property names
+	           */
+	          key = Object.keys(data)[0];
+
+	          /**
+	           * Get the data
+	           */
+	          value = data[key];
+	          // console.log('key');
+	          // console.log(key);
+	          // console.log('value');
+	          // console.log(value);
+
+	          /**
+	           * Add a new property with the data
+	           */
+	          historical[key] = value;
+	          this.setState({ historical: historical, symbol: '' });
+	          break;
 	        case 'historical':
 	          this.setState({ historical: data, symbol: '' });
 	          break;
@@ -437,10 +483,11 @@
 
 	var GetQuote = React.createClass({
 	  displayName: 'GetQuote',
-	  getData: function getData(symbols) {
+	  getData: function getData(symbols, type) {
 	    var _this5 = this;
 
 	    // console.log('GetQuote getData');
+	    // console.log(type);
 	    // console.log(symbols);
 
 	    var url,
@@ -466,7 +513,7 @@
 	    $.ajax(header).then(function (results) {
 	      // console.log('GetQuote got historical');
 	      // console.log(results);
-	      _this5.props.cb('historical', results);
+	      _this5.props.cb(type, results);
 	    });
 
 	    /**
@@ -484,7 +531,7 @@
 	     * TODO: For test only use the for loop when finished
 	     */
 
-	    this.getData(this.props.symbols);
+	    this.getData(this.props.symbols, 'historical');
 	  },
 	  render: function render() {
 	    // console.log('GetQuote render');
@@ -495,7 +542,7 @@
 	    if (this.props.symbol !== '') {
 	      // console.log('mock get data');
 	      // var symbol = [this.props.symbol];
-	      this.getData([this.props.symbol]);
+	      this.getData([this.props.symbol], 'add');
 	    }
 	    return null;
 	  }
