@@ -19,6 +19,11 @@ function getColors(num) {
     format: 'rgb',
     colors_returned: num
   });
+  if (num <= 1) {
+    // console.log(num);
+    myColors = [myColors];
+  }
+  // console.log(myColors);
   myColors.forEach(item => {
     var color = 'rgba(' + item.r + ', ' + item.g + ', ' + item.b + ', ' + '1)';
     var bg = 'rgba(' + item.r + ', ' + item.g + ', ' + item.b + ', ' + '0.2)';
@@ -561,7 +566,7 @@ const FilterData = React.createClass({
     // console.log('state');
     // console.log(this.state);
     var labels = [1, 3, 6, 'YTD'],
-      chart, list, dates;
+      chart, list, dates, colors;
 
     list = labels.map((value, key) => {
       var label;
@@ -610,6 +615,9 @@ const FilterData = React.createClass({
       var endDate = data[0][Object.keys(data[0])[0]][end].date.split('T')[0];
       // console.log(startDate.split('T')[0]);
       // console.log(endDate);
+      // console.log(Object.keys(data[0]).length);
+
+      colors = getColors(Object.keys(data[0]).length);
 
       dates = (
         <span className='dates'>
@@ -618,7 +626,7 @@ const FilterData = React.createClass({
         </span>
       );
       // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-      chart = <LineAndScatterChart data={data} type={type} />
+      chart = <LineAndScatterChart data={data} type={type} colors={colors} />
     }
 
     return (

@@ -18,8 +18,8 @@ var { fitWidth, TypeChooser } = helper;
 class LineAndScatterChart extends React.Component {
 	render() {
 		// console.log('LineAndScatterChart render');
-		var { data, type, width, ratio } = this.props;
-		var	parseTime = timeParse("%Y-%m-%dT%H:%M:%S.%LZ"),
+		var { data, type, width, ratio, colors } = this.props;
+		var parseTime = timeParse("%Y-%m-%dT%H:%M:%S.%LZ"),
 			date, keys, chart, hist = [];
 		/**
  		 * Testing setting properties
@@ -83,33 +83,44 @@ class LineAndScatterChart extends React.Component {
 		// console.log(hist);
 		var increment = 70;
 		var origin = -40;
-		// origin = origin + increment;
+
+		/**
+		 * History lines
+		 */
 		var lines = keys.map((value, key) => {
 			// console.log(value);
+			// console.log(key);
+			var color = colors.c[key];
 			var line = (
 				<LineSeries
 					key={key}
 					yAccessor={d => d[value]}
+					stroke={color}
 					strokeDasharray="Solid" />
 			);
 			return line;
 		});
 
+		/**
+		 * Put the dots on the lines
+		 */
 		var scatters = keys.map((value, key) => {
 			// console.log(value);
+			// console.log(key);
+			var color = colors.bg[key];
 			var line = (
 				<ScatterSeries
 					key={key}
 					yAccessor={d => d[value]}
 					marker={CircleMarker}
-					markerProps={{ r: 3 }}
-					stroke="green" />
+					markerProps={{ r: 1.5 }}
+					stroke={color} />
 			);
 			return line;
 		});
 
-
-		// console.log(lines);
+		var start = hist[0].date;
+		var end = hist[len - 1].date;
 
 		return (
 			<ChartCanvas ratio={ratio} width={width} height={400}
@@ -119,7 +130,9 @@ class LineAndScatterChart extends React.Component {
 				seriesName="MSFT"
 				data={hist}
 				xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
-				xExtents={[new Date(2016, 0, 1), new Date(2016, 3, 1)]}>
+				xExtents={[
+					new Date(start.getFullYear(), start.getMonth(), start.getDate()),
+					new Date(end.getFullYear(), end.getMonth(), end.getDate())]}>
 				<Chart id={1}
 					yExtents={d => [d.high, d.low]}
 					padding={{ top: 25, bottom: 5 }}>
@@ -143,44 +156,6 @@ class LineAndScatterChart extends React.Component {
 					{lines}
 					{scatters}
 
-					{/*<LineSeries
-						yAccessor={d => d[value]}
-						strokeDasharray="Solid" />
-					<ScatterSeries
-						yAccessor={d => d[value]}
-						marker={CircleMarker}
-						markerProps={{ r: 3 }} />
-					<SingleValueTooltip
-						yAccessor={d => d[value]}
-						yLabel="MS"
-						yDisplayFormat={format(".2f")}
-						valueStroke="#ff7f0e"
-						labelStroke="#4682B4"
-						origin={[-40, 0]} />*/}
-
-					{/*<LineSeries
-						yAccessor={d => dTWTR}
-						strokeDasharray="Solid"
-						stroke="green" />
-					<ScatterSeries
-						yAccessor={d => dTWTR}
-						marker={CircleMarker}
-						markerProps={{ r: 3 }}
-						stroke="green" />
-					<SingleValueTooltip
-						yAccessor={d => dTWTR}
-						yLabel="TWTR"
-						yDisplayFormat={format(".2f")}
-						valueStroke="#2ca02c"
-						labelStroke="#4682B4"
-						origin={[30, 0]} />
-					<SingleValueTooltip
-						yAccessor={d => dTWTR}
-						yLabel="TWTR"
-						yDisplayFormat={format(".2f")}
-						valueStroke="#2ca02c"
-						labelStroke="#4682B4"
-						origin={[100, 0]} />*/}
 				</Chart>
 
 				<CrossHairCursor />
@@ -205,7 +180,7 @@ LineAndScatterChart = fitWidth(LineAndScatterChart);
 LineSeries.defaultProps = {
 	className: "line ",
 	strokeWidth: 1,
-	hoverStrokeWidth: 4,
+	hoverStrokeWidth: 2,
 	fill: "none",
 	stroke: "#4682B4",
 	strokeDasharray: "Solid",

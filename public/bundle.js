@@ -79,6 +79,11 @@
 	    format: 'rgb',
 	    colors_returned: num
 	  });
+	  if (num <= 1) {
+	    // console.log(num);
+	    myColors = [myColors];
+	  }
+	  // console.log(myColors);
 	  myColors.forEach(function (item) {
 	    var color = 'rgba(' + item.r + ', ' + item.g + ', ' + item.b + ', ' + '1)';
 	    var bg = 'rgba(' + item.r + ', ' + item.g + ', ' + item.b + ', ' + '0.2)';
@@ -670,7 +675,8 @@
 	    var labels = [1, 3, 6, 'YTD'],
 	        chart,
 	        list,
-	        dates;
+	        dates,
+	        colors;
 
 	    list = labels.map(function (value, key) {
 	      var label;
@@ -719,6 +725,9 @@
 	      var endDate = data[0][Object.keys(data[0])[0]][end].date.split('T')[0];
 	      // console.log(startDate.split('T')[0]);
 	      // console.log(endDate);
+	      // console.log(Object.keys(data[0]).length);
+
+	      colors = getColors(Object.keys(data[0]).length);
 
 	      dates = React.createElement(
 	        'span',
@@ -737,7 +746,7 @@
 	        )
 	      );
 	      // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />
-	      chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type });
+	      chart = React.createElement(_LineAndScatterChart2.default, { data: data, type: type, colors: colors });
 	    }
 
 	    return React.createElement(
@@ -939,7 +948,8 @@
 				    data = _props.data,
 				    type = _props.type,
 				    width = _props.width,
-				    ratio = _props.ratio;
+				    ratio = _props.ratio,
+				    colors = _props.colors;
 
 				var parseTime = (0, _d3TimeFormat.timeParse)("%Y-%m-%dT%H:%M:%S.%LZ"),
 				    date,
@@ -1008,32 +1018,44 @@
 				// console.log(hist);
 				var increment = 70;
 				var origin = -40;
-				// origin = origin + increment;
+
+				/**
+	    * History lines
+	    */
 				var lines = keys.map(function (value, key) {
 					// console.log(value);
+					// console.log(key);
+					var color = colors.c[key];
 					var line = _react2.default.createElement(LineSeries, {
 						key: key,
 						yAccessor: function yAccessor(d) {
 							return d[value];
 						},
+						stroke: color,
 						strokeDasharray: "Solid" });
 					return line;
 				});
 
+				/**
+	    * Put the dots on the lines
+	    */
 				var scatters = keys.map(function (value, key) {
 					// console.log(value);
+					// console.log(key);
+					var color = colors.bg[key];
 					var line = _react2.default.createElement(ScatterSeries, {
 						key: key,
 						yAccessor: function yAccessor(d) {
 							return d[value];
 						},
 						marker: CircleMarker,
-						markerProps: { r: 3 },
-						stroke: "green" });
+						markerProps: { r: 1.5 },
+						stroke: color });
 					return line;
 				});
 
-				// console.log(lines);
+				var start = hist[0].date;
+				var end = hist[len - 1].date;
 
 				return _react2.default.createElement(
 					_reactStockcharts.ChartCanvas,
@@ -1046,7 +1068,7 @@
 						xAccessor: function xAccessor(d) {
 							return d.date;
 						}, xScaleProvider: discontinuousTimeScaleProvider,
-						xExtents: [new Date(2016, 0, 1), new Date(2016, 3, 1)] },
+						xExtents: [new Date(start.getFullYear(), start.getMonth(), start.getDate()), new Date(end.getFullYear(), end.getMonth(), end.getDate())] },
 					_react2.default.createElement(
 						_reactStockcharts.Chart,
 						{ id: 1,
@@ -1097,7 +1119,7 @@
 	LineSeries.defaultProps = {
 		className: "line ",
 		strokeWidth: 1,
-		hoverStrokeWidth: 4,
+		hoverStrokeWidth: 2,
 		fill: "none",
 		stroke: "#4682B4",
 		strokeDasharray: "Solid",
