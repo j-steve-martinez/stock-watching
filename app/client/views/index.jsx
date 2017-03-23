@@ -255,18 +255,31 @@ class Main extends React.Component {
       // console.log('primus new data: ' + data.split(':')[1]);
       var action = data.split(':')[0];
       var symbol = data.split(':')[1];
+      // console.log(action);
+      // console.log(symbol);
       var symbols = this.state.symbols;
       if (symbols.indexOf(symbol) === -1) {
+        // console.log('adding');
         // add
         symbols.push(symbol);
+        this.setState({ symbols: symbols, symbol: symbol });
       } else {
+        // console.log('deleting');
+        var historical = this.state.historical;
+        // console.log(historical);
         // remove
         symbols = symbols.filter((value, key) => {
+          // console.log(value);
           return value !== symbol;
         });
         symbol = "";
+        var newHist = {};
+        symbols.forEach(value => {
+          newHist[value] = historical[value];
+        });
+        this.setState({ symbols: symbols, symbol: symbol, historical: newHist });
       }
-      this.setState({ symbols: symbols, symbol: symbol });
+
     });
 
     /**
@@ -284,7 +297,7 @@ class Main extends React.Component {
         return value.name;
       });
 
-      this.setState({ symbols, symbol: "", primus: primus, historical: [] });
+      this.setState({ symbols, symbol: "", primus: primus, historical: {} });
 
     });
   }
@@ -568,8 +581,10 @@ const FilterData = React.createClass({
         </button>
       )
     });
-
-    if (this.state.data === null || this.state.data.length === 0) {
+    // console.log('data keys');
+    // console.log(this.state.data[0]);
+    // console.log(Object.keys(this.state.data[0]).length);
+    if (this.state.data === null || Object.keys(this.state.data[0]).length === 0) {
       // console.log('null chart');
       chart = null;
       dates = null;
@@ -586,6 +601,7 @@ const FilterData = React.createClass({
       var data = this.filter();
 
       // console.log('filtered data');
+      // console.log(data[0]);
       // console.log(data[0][Object.keys(data[0])[0]].length);
       var end = data[0][Object.keys(data[0])[0]].length - 1;
       // console.log(data[0][Object.keys(data[0])[0]][0].date);

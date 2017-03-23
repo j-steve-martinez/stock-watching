@@ -331,18 +331,30 @@
 	        // console.log('primus new data: ' + data.split(':')[1]);
 	        var action = data.split(':')[0];
 	        var symbol = data.split(':')[1];
+	        // console.log(action);
+	        // console.log(symbol);
 	        var symbols = _this3.state.symbols;
 	        if (symbols.indexOf(symbol) === -1) {
+	          // console.log('adding');
 	          // add
 	          symbols.push(symbol);
+	          _this3.setState({ symbols: symbols, symbol: symbol });
 	        } else {
+	          // console.log('deleting');
+	          var historical = _this3.state.historical;
+	          // console.log(historical);
 	          // remove
 	          symbols = symbols.filter(function (value, key) {
+	            // console.log(value);
 	            return value !== symbol;
 	          });
 	          symbol = "";
+	          var newHist = {};
+	          symbols.forEach(function (value) {
+	            newHist[value] = historical[value];
+	          });
+	          _this3.setState({ symbols: symbols, symbol: symbol, historical: newHist });
 	        }
-	        _this3.setState({ symbols: symbols, symbol: symbol });
 	      });
 
 	      /**
@@ -360,7 +372,7 @@
 	          return value.name;
 	        });
 
-	        _this3.setState({ symbols: symbols, symbol: "", primus: primus, historical: [] });
+	        _this3.setState({ symbols: symbols, symbol: "", primus: primus, historical: {} });
 	      });
 	    }
 	  }, {
@@ -678,8 +690,10 @@
 	        label
 	      );
 	    });
-
-	    if (this.state.data === null || this.state.data.length === 0) {
+	    // console.log('data keys');
+	    // console.log(this.state.data[0]);
+	    // console.log(Object.keys(this.state.data[0]).length);
+	    if (this.state.data === null || Object.keys(this.state.data[0]).length === 0) {
 	      // console.log('null chart');
 	      chart = null;
 	      dates = null;
@@ -696,6 +710,7 @@
 	      var data = this.filter();
 
 	      // console.log('filtered data');
+	      // console.log(data[0]);
 	      // console.log(data[0][Object.keys(data[0])[0]].length);
 	      var end = data[0][Object.keys(data[0])[0]].length - 1;
 	      // console.log(data[0][Object.keys(data[0])[0]][0].date);
