@@ -5,7 +5,7 @@
 var express = require('express');
 var routes = require('./app/routes/index.js');
 var mongoose = require('mongoose');
-var passport = require('passport');
+// var passport = require('passport');
 var session = require('express-session');
 var sessionMongo = require('express-session');
 var MongoDBStore = require('connect-mongodb-session')(sessionMongo);
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
 	require('dotenv').load();
 }
 
-require('./app/config/passport')(passport);
+// require('./app/config/passport')(passport);
 
 /**
  * Create a new MongoDBStore
@@ -51,19 +51,19 @@ app.use('/views', express.static(process.cwd() + '/app/client/views'));
  */
 primus.save('./public/js/primus.js');
 
-app.use(session({
-	secret: 'secretSauce',
-	resave: true,
-	saveUninitialized: true,
-	cookie: {
-		maxAge: 1000 * 60 * 60 * 24 * 7
-	},
-	store: store,
-}));
+// app.use(session({
+// 	secret: 'secretSauce',
+// 	resave: true,
+// 	saveUninitialized: true,
+// 	cookie: {
+// 		maxAge: 1000 * 60 * 60 * 24 * 7
+// 	},
+// 	store: store,
+// }));
 
-app.use(passport.initialize());
-app.use(passport.session());
-
+// app.use(passport.initialize());
+// app.use(passport.session());
+var passport = 'test';
 routes(app, passport, primus);
 
 var port = process.env.PORT || 8080;
