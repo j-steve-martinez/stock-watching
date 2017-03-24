@@ -173,15 +173,25 @@
 	       * Get the symbols list
 	       */
 	      var symbols = this.state.symbols;
+	      var full = this.state.full;
 
 	      /**
 	       * Add or delete the symbols from the list
+	       */
+
+	      /**
+	       * If the symbol is not in the list 
+	       *  ask the server to validate 
+	       *  then notify other clients
+	       * Else delete the symbol from the list
+	       *  then notify other clients
 	       */
 	      if (symbols.indexOf(symbol) === -1 && symbol !== '') {
 	        /**
 	         * Validate the symbol
 	         */
 	        var url,
+	            full,
 	            data = {},
 	            header = {};
 
@@ -195,30 +205,35 @@
 	        // console.log(header);
 	        $.ajax(header).then(function (results) {
 
-	          // console.log('Main getQuote done');
-	          // console.log(results);
-	          if (results[0].name === null) {
+	          console.log('Main getQuote done');
+	          console.log(results);
+	          if (results[0].symbol === null) {
+	            // console.log('Main getQuote null');
 	            /**
 	             * Not a valid symbol: notify the user;
 	             */
 	            _this2.setState({ message: 'Not A Valid Symbol' });
 	          } else {
-
+	            // console.log('Main getQuote got a symbol');
 	            /**
 	             * Add the symbol to the list
 	             */
+	            // console.log(results);
 	            symbols.push(symbol);
 
 	            /**
 	             * Notify the server to update all clients
 	             */
-	            message = 'add:' + symbol;
+	            // message = 'add:' + symbol;
+	            message = 'add:' + results[0]['symbol'] + ':' + results[0]['name'];
 	            _this2.state.primus.write(message);
 
 	            /**
 	             * Update the app
 	             */
-	            _this2.setState({ symbols: symbols, symbol: symbol });
+
+	            full.push(results[0]);
+	            _this2.setState({ symbols: symbols, symbol: symbol, full: full });
 	          }
 	        });
 	      } else if (symbols.indexOf(symbol) >= 0 && symbol !== '') {
@@ -254,10 +269,13 @@
 	        keys.forEach(function (key) {
 	          newObj[key] = historical[key];
 	        });
-	        // console.log('newObj');
-	        // console.log(newObj);
-	        // this.setState({ historical: historical, symbol : '' });
-	        this.setState({ historical: newObj, symbols: symbols, symbol: '' });
+	        /**
+	         * Remove the symbol from the full name list
+	         */
+	        var fullname = full.filter(function (value) {
+	          return value['symbol'] !== symbol;
+	        });
+	        this.setState({ historical: newObj, symbols: symbols, symbol: '', full: fullname });
 	      }
 	    }
 	  }, {
@@ -365,6 +383,7 @@
 	      /**
 	       * Get the symbols from the server
 	       */
+	      var full = [];
 	      var url = window.location.origin + '/api/quotes';
 	      $.ajax({
 	        url: url,
@@ -373,11 +392,13 @@
 	      }).then(function (list) {
 	        // console.log('Got Symbol List');
 	        // console.log(list);
+	        full = list;
 	        var symbols = list.map(function (value) {
-	          return value.name;
+	          // console.log(value);
+	          return value.symbol;
 	        });
 
-	        _this3.setState({ symbols: symbols, symbol: "", primus: primus, historical: {} });
+	        _this3.setState({ symbols: symbols, symbol: "", primus: primus, historical: {}, full: full });
 	      });
 	    }
 	  }, {
@@ -396,7 +417,8 @@
 	        stocks = null;
 	      } else {
 	        quotes = React.createElement(GetQuote, { symbols: this.state.symbols, symbol: this.state.symbol, cb: this.callBack });
-	        stocks = React.createElement(ListStocks, { symbols: this.state.symbols, cb: this.callBack });
+	        // stocks = <ListStocks symbols={this.state.symbols} cb={this.callBack} />;
+	        stocks = React.createElement(ListStocks, { stocks: this.state.full, cb: this.callBack });
 	      }
 
 	      if (this.state === null || this.state.historical.length === 0) {
@@ -414,10 +436,10 @@
 
 	      return React.createElement(
 	        'div',
-	        { className: 'container' },
+	        { className: 'container-fluid' },
 	        React.createElement(
 	          'div',
-	          { className: 'jumbotron' },
+	          null,
 	          React.createElement(
 	            'div',
 	            { className: 'row' },
@@ -425,13 +447,14 @@
 	              'div',
 	              { className: 'col-sm-12' },
 	              React.createElement(
-	                'h1',
+	                'h4',
 	                null,
-	                'Stock Watcher'
+	                'STOCKS'
 	              )
 	            )
 	          )
 	        ),
+	        chart,
 	        React.createElement(
 	          'div',
 	          null,
@@ -447,8 +470,7 @@
 	            )
 	          ),
 	          stocks
-	        ),
-	        chart
+	        )
 	      );
 	    }
 	  }]);
@@ -473,19 +495,19 @@
 	    // console.log('ListStocks');
 	    // console.log(this.props);
 	    // var list = null;
-	    var list = this.props.symbols.map(function (value, key) {
+	    var list = this.props.stocks.map(function (value, key) {
 	      return React.createElement(
 	        'button',
 	        {
 	          onClick: _this4.handleClick,
-	          id: value,
+	          id: value['symbol'],
 	          key: key,
 	          className: 'btn btn-info' },
 	        React.createElement('span', {
 	          className: 'glyphicon glyphicon-remove-sign',
 	          'aria-hidden': 'true' }),
 	        ' ',
-	        value
+	        value['symbol'] + ' : ' + value['name']
 	      );
 	    });
 
@@ -692,7 +714,7 @@
 	          onClick: _this6.clickH,
 	          id: value,
 	          key: key,
-	          className: 'btn btn-xs btn-default filter' },
+	          className: 'btn btn-xs btn-warning filter' },
 	        label
 	      );
 	    });
@@ -1026,6 +1048,7 @@
 					// console.log(value);
 					// console.log(key);
 					var color = colors.c[key];
+					// console.log(color);
 					var line = _react2.default.createElement(LineSeries, {
 						key: key,
 						yAccessor: function yAccessor(d) {
@@ -1043,13 +1066,14 @@
 					// console.log(value);
 					// console.log(key);
 					var color = colors.bg[key];
+					// console.log(color);
 					var line = _react2.default.createElement(ScatterSeries, {
 						key: key,
 						yAccessor: function yAccessor(d) {
 							return d[value];
 						},
 						marker: CircleMarker,
-						markerProps: { r: 1.5 },
+						markerProps: { r: 2.1 },
 						stroke: color });
 					return line;
 				});
@@ -1118,8 +1142,8 @@
 
 	LineSeries.defaultProps = {
 		className: "line ",
-		strokeWidth: 1,
-		hoverStrokeWidth: 2,
+		strokeWidth: 2,
+		hoverStrokeWidth: 4,
 		fill: "none",
 		stroke: "#4682B4",
 		strokeDasharray: "Solid",

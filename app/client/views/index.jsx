@@ -101,15 +101,24 @@ class Main extends React.Component {
      * Get the symbols list
      */
     var symbols = this.state.symbols;
+    var full = this.state.full;
 
     /**
      * Add or delete the symbols from the list
+     */
+
+    /**
+     * If the symbol is not in the list 
+     *  ask the server to validate 
+     *  then notify other clients
+     * Else delete the symbol from the list
+     *  then notify other clients
      */
     if (symbols.indexOf(symbol) === -1 && symbol !== '') {
       /**
        * Validate the symbol
        */
-      var url,
+      var url, full,
         data = {},
         header = {};
 
@@ -123,30 +132,35 @@ class Main extends React.Component {
       // console.log(header);
       $.ajax(header).then(results => {
 
-        // console.log('Main getQuote done');
-        // console.log(results);
-        if (results[0].name === null) {
+        console.log('Main getQuote done');
+        console.log(results);
+        if (results[0].symbol === null) {
+          // console.log('Main getQuote null');
           /**
            * Not a valid symbol: notify the user;
            */
           this.setState({ message: 'Not A Valid Symbol' });
         } else {
-
+          // console.log('Main getQuote got a symbol');
           /**
            * Add the symbol to the list
            */
+          // console.log(results);
           symbols.push(symbol);
 
           /**
            * Notify the server to update all clients
            */
-          message = 'add:' + symbol;
+          // message = 'add:' + symbol;
+          message = 'add:' + results[0]['symbol'] + ':' + results[0]['name'];
           this.state.primus.write(message);
 
           /**
            * Update the app
            */
-          this.setState({ symbols: symbols, symbol: symbol });
+
+          full.push(results[0]);
+          this.setState({ symbols: symbols, symbol: symbol, full: full });
         }
 
       });
@@ -186,10 +200,13 @@ class Main extends React.Component {
       keys.forEach(key => {
         newObj[key] = historical[key];
       });
-      // console.log('newObj');
-      // console.log(newObj);
-      // this.setState({ historical: historical, symbol : '' });
-      this.setState({ historical: newObj, symbols: symbols, symbol: '' })
+      /**
+       * Remove the symbol from the full name list
+       */
+      var fullname = full.filter(value => {
+        return value['symbol'] !== symbol;
+      });
+      this.setState({ historical: newObj, symbols: symbols, symbol: '', full: fullname })
     }
   }
 
@@ -290,6 +307,7 @@ class Main extends React.Component {
     /**
      * Get the symbols from the server
      */
+    var full = [];
     var url = window.location.origin + '/api/quotes';
     $.ajax({
       url: url,
@@ -298,11 +316,13 @@ class Main extends React.Component {
     }).then(list => {
       // console.log('Got Symbol List');
       // console.log(list);
+      full = list;
       var symbols = list.map(value => {
-        return value.name;
+        // console.log(value);
+        return value.symbol;
       });
 
-      this.setState({ symbols, symbol: "", primus: primus, historical: {} });
+      this.setState({ symbols, symbol: "", primus: primus, historical: {}, full: full });
 
     });
   }
@@ -318,7 +338,8 @@ class Main extends React.Component {
       stocks = null;
     } else {
       quotes = <GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />;
-      stocks = <ListStocks symbols={this.state.symbols} cb={this.callBack} />;
+      // stocks = <ListStocks symbols={this.state.symbols} cb={this.callBack} />;
+      stocks = <ListStocks stocks={this.state.full} cb={this.callBack} />;
     }
 
     if (this.state === null || this.state.historical.length === 0) {
@@ -335,24 +356,23 @@ class Main extends React.Component {
     }
 
     return (
-      <div className="container">
-        <div className="jumbotron">
+      <div className="container-fluid">
+        <div >
           <div className="row">
             <div className="col-sm-12">
-              <h1>Stock Watcher</h1>
+              <h4>STOCKS</h4>
             </div>
           </div>
         </div>
+        {chart}
         <div>
           {quotes}
           <form>
             <input type="text" id="echo" placeholder="Enter a Stock Symbol" />
             <button type="submit" className='submit' onClick={this.handleClick}>Enter</button>
           </form>
-
           {stocks}
         </div>
-        {chart}
       </div>
     )
   }
@@ -372,17 +392,17 @@ const ListStocks = React.createClass({
     // console.log('ListStocks');
     // console.log(this.props);
     // var list = null;
-    var list = this.props.symbols.map((value, key) => {
+    var list = this.props.stocks.map((value, key) => {
       return (
         <button
           onClick={this.handleClick}
-          id={value}
+          id={value['symbol']}
           key={key}
           className="btn btn-info">
           <span
             className="glyphicon glyphicon-remove-sign"
             aria-hidden="true">
-          </span> {value}
+          </span> {value['symbol'] + ' : ' + value['name']}
         </button>
       )
     });
@@ -581,7 +601,7 @@ const FilterData = React.createClass({
           onClick={this.clickH}
           id={value}
           key={key}
-          className="btn btn-xs btn-default filter">
+          className="btn btn-xs btn-warning filter">
           {label}
         </button>
       )

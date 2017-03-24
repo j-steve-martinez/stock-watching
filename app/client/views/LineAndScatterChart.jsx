@@ -91,6 +91,7 @@ class LineAndScatterChart extends React.Component {
 			// console.log(value);
 			// console.log(key);
 			var color = colors.c[key];
+			// console.log(color);
 			var line = (
 				<LineSeries
 					key={key}
@@ -108,12 +109,13 @@ class LineAndScatterChart extends React.Component {
 			// console.log(value);
 			// console.log(key);
 			var color = colors.bg[key];
+			// console.log(color);
 			var line = (
 				<ScatterSeries
 					key={key}
 					yAccessor={d => d[value]}
 					marker={CircleMarker}
-					markerProps={{ r: 1.5 }}
+					markerProps={{ r: 2.1 }}
 					stroke={color} />
 			);
 			return line;
@@ -179,8 +181,8 @@ LineAndScatterChart = fitWidth(LineAndScatterChart);
 
 LineSeries.defaultProps = {
 	className: "line ",
-	strokeWidth: 1,
-	hoverStrokeWidth: 2,
+	strokeWidth: 2,
+	hoverStrokeWidth: 4,
 	fill: "none",
 	stroke: "#4682B4",
 	strokeDasharray: "Solid",

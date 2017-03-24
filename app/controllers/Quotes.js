@@ -69,5 +69,5 @@ function Quotes() {
         });
     }
 }
-
+ 
 module.exports = Quotes;

@@ -14,7 +14,8 @@ function ClickHandler() {
 					// add default Stock
 					console.log('add default: Twitter');
 					var stock = new Stock({
-						name: "TWTR"
+						symbol: "TWTR",
+						name: 'Twitter Inc.'
 					});
 					stock.save((err, data) => {
 						if (err) throw err;
@@ -34,9 +35,15 @@ function ClickHandler() {
 			});
 	}
 
-	this.addStock = (symbol) => {
+	this.addStock = (stock) => {
 		var isSaved = false;
-		Stock.find({ name: symbol }, (err, symbols) => {
+		console.log('Stock:');
+		console.log(stock);
+
+		var symbol = stock.split(':')[0];
+		var name = stock.split(':')[1];
+
+		Stock.find({ name: name }, (err, symbols) => {
 			if (err) throw err;
 
 			if (symbols.length) {
@@ -46,7 +53,7 @@ function ClickHandler() {
 				// this.isSaved = false;
 
 			} else {
-				var newStock = new Stock({ name: symbol });
+				var newStock = new Stock({ symbol: symbol, name: name });
 
 				// Saving it to the database.
 				newStock.save(function (err, data) {
@@ -62,10 +69,13 @@ function ClickHandler() {
 
 	}
 
-	this.delStock = (symbol) => {
+	this.delStock = (stock) => {
 		// console.log('del getStock');
+		var symbol = stock.split(':')[0];
+		// var name = stock.split(':')[1];
+
 		Stock
-			.findOneAndRemove({ name: symbol }, (err, doc) => {
+			.findOneAndRemove({ symbol: symbol }, (err, doc) => {
 				console.log('removed');
 				console.log(doc);
 			})

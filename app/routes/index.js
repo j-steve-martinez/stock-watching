@@ -33,10 +33,14 @@ module.exports = function (app, passport, primus) {
 			 *  or add to database then run the for loop on primus
 			 */
 			var dataArr = data.split(':');
+			// var stock = { name : dataArr[] }
+			var stock = dataArr[1] + ':' + dataArr[2]
 			if (dataArr[0] === 'add') {
-				clickHandler.addStock(dataArr[1]);
+				// clickHandler.addStock(dataArr[1]);
+				clickHandler.addStock(stock);
 			} else if (dataArr[0] === 'del') {
-				clickHandler.delStock(dataArr[1]);
+				// clickHandler.delStock(dataArr[1]);
+				clickHandler.delStock(stock);
 			}
 
 			/**
@@ -53,7 +57,7 @@ module.exports = function (app, passport, primus) {
 			});
 		});
 	});
-
+ 
 	/**
 	 * Get the stock Stock data
 	 */
