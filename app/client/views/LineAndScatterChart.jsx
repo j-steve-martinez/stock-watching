@@ -11,12 +11,60 @@ var { discontinuousTimeScaleProvider } = scale;
 
 var { CrossHairCursor, MouseCoordinateX, MouseCoordinateY } = coordinates;
 
-var { OHLCTooltip, SingleValueTooltip } = tooltip;
+var { OHLCTooltip, SingleValueTooltip, HoverTooltip } = tooltip;
 var { XAxis, YAxis } = axes;
 var { fitWidth, TypeChooser } = helper;
 
+var dateFormat = timeFormat("%Y-%m-%d");
+var numberFormat = format(".2f");
+
+var lineColors = {};
+
+function tooltipContent() {
+	return ({ currentItem, xAccessor }) => {
+		var keys = Object.keys(currentItem).filter(each => {
+			if (each !== 'high' && each !== 'low' && each !== 'idx' && each !== 'date') {
+				return each;
+			}
+		});
+		var y = [];
+		keys.forEach(value => {
+			y.push({ label: value, value: currentItem[value] && numberFormat(currentItem[value]) });
+		});
+
+		return {
+			x: dateFormat(xAccessor(currentItem)),
+			y: y
+		};
+	};
+}
+
+function tooltipCustom({ fontFamily, fontSize, fontFill }, content) {
+	var tspans = [];
+	var X = 10;
+	var Y = 10;
+	const startY = Y + fontSize * 0.9;
+
+	for (var i = 0; i < content.y.length; i++) {
+		let y = content.y[i];
+		let textY = startY + (fontSize * (i + 1));
+		// console.log(lineColors);
+		// console.log(y);
+		y.stroke = lineColors[y.label]
+
+		tspans.push(<tspan key={`L-${i}`} x={X} y={textY} fill={y.stroke}>{y.label}</tspan>);
+		tspans.push(<tspan key={i}>: </tspan>);
+		tspans.push(<tspan key={`V-${i}`}>{y.value}</tspan>);
+	}
+	return <text fontFamily={fontFamily} fontSize={fontSize} fill={fontFill}>
+		<tspan x={X} y={startY}>{content.x}</tspan>
+		{tspans}
+	</text>;
+};
+
 class LineAndScatterChart extends React.Component {
 	render() {
+
 		// console.log('LineAndScatterChart render');
 		var { data, type, width, ratio, colors } = this.props;
 		var parseTime = timeParse("%Y-%m-%dT%H:%M:%S.%LZ"),
@@ -65,9 +113,9 @@ class LineAndScatterChart extends React.Component {
 				/**
 				 * Set the close for testing
 				 */
-				if (day.close === undefined) {
-					day.close = +data[name][i].close;
-				}
+				// if (day.close === undefined) {
+				// 	day.close = +data[name][i].close;
+				// }
 
 				/**
 				 * Set the date for the x axis ticks
@@ -87,10 +135,12 @@ class LineAndScatterChart extends React.Component {
 		/**
 		 * History lines
 		 */
+
 		var lines = keys.map((value, key) => {
 			// console.log(value);
 			// console.log(key);
 			var color = colors.c[key];
+			lineColors[value] = color;
 			// console.log(color);
 			var line = (
 				<LineSeries
@@ -129,7 +179,7 @@ class LineAndScatterChart extends React.Component {
 				margin={{ left: 15, right: 60, top: 20, bottom: 30 }}
 				type={type}
 				pointsPerPxThreshold={1}
-				seriesName="MSFT"
+				seriesName="STOCKS"
 				data={hist}
 				xAccessor={d => d.date} xScaleProvider={discontinuousTimeScaleProvider}
 				xExtents={[
@@ -156,9 +206,16 @@ class LineAndScatterChart extends React.Component {
 						displayFormat={format(".2f")} />
 
 					{lines}
-					{scatters}
+					{/*{scatters}*/}
 
 				</Chart>
+				<HoverTooltip
+					chartId={1}
+					bgFill="aliceblue"
+					stroke={'solid'}
+					bgOpacity={0.2}
+					tooltipContent={tooltipContent()}
+					tooltipSVG={tooltipCustom} />
 
 				<CrossHairCursor />
 			</ChartCanvas>
@@ -194,5 +251,7 @@ LineSeries.defaultProps = {
 	onDoubleClick: function (e) { console.log("Double Click", e); },
 	onContextMenu: function (e) { console.log("Right Click", e); },
 };
+
+HoverTooltip.propTypes = {};
 
 export default LineAndScatterChart;

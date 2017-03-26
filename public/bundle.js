@@ -947,11 +947,85 @@
 	    MouseCoordinateX = _reactStockcharts.coordinates.MouseCoordinateX,
 	    MouseCoordinateY = _reactStockcharts.coordinates.MouseCoordinateY;
 	var OHLCTooltip = _reactStockcharts.tooltip.OHLCTooltip,
-	    SingleValueTooltip = _reactStockcharts.tooltip.SingleValueTooltip;
+	    SingleValueTooltip = _reactStockcharts.tooltip.SingleValueTooltip,
+	    HoverTooltip = _reactStockcharts.tooltip.HoverTooltip;
 	var XAxis = _reactStockcharts.axes.XAxis,
 	    YAxis = _reactStockcharts.axes.YAxis;
 	var fitWidth = _reactStockcharts.helper.fitWidth,
 	    TypeChooser = _reactStockcharts.helper.TypeChooser;
+
+
+	var dateFormat = (0, _d3TimeFormat.timeFormat)("%Y-%m-%d");
+	var numberFormat = (0, _d3Format.format)(".2f");
+
+	var lineColors = {};
+
+	function tooltipContent() {
+		return function (_ref) {
+			var currentItem = _ref.currentItem,
+			    xAccessor = _ref.xAccessor;
+
+			var keys = Object.keys(currentItem).filter(function (each) {
+				if (each !== 'high' && each !== 'low' && each !== 'idx' && each !== 'date') {
+					return each;
+				}
+			});
+			var y = [];
+			keys.forEach(function (value) {
+				y.push({ label: value, value: currentItem[value] && numberFormat(currentItem[value]) });
+			});
+
+			return {
+				x: dateFormat(xAccessor(currentItem)),
+				y: y
+			};
+		};
+	}
+
+	function tooltipCustom(_ref2, content) {
+		var fontFamily = _ref2.fontFamily,
+		    fontSize = _ref2.fontSize,
+		    fontFill = _ref2.fontFill;
+
+		var tspans = [];
+		var X = 10;
+		var Y = 10;
+		var startY = Y + fontSize * 0.9;
+
+		for (var i = 0; i < content.y.length; i++) {
+			var y = content.y[i];
+			var textY = startY + fontSize * (i + 1);
+			// console.log(lineColors);
+			// console.log(y);
+			y.stroke = lineColors[y.label];
+
+			tspans.push(_react2.default.createElement(
+				"tspan",
+				{ key: "L-" + i, x: X, y: textY, fill: y.stroke },
+				y.label
+			));
+			tspans.push(_react2.default.createElement(
+				"tspan",
+				{ key: i },
+				": "
+			));
+			tspans.push(_react2.default.createElement(
+				"tspan",
+				{ key: "V-" + i },
+				y.value
+			));
+		}
+		return _react2.default.createElement(
+			"text",
+			{ fontFamily: fontFamily, fontSize: fontSize, fill: fontFill },
+			_react2.default.createElement(
+				"tspan",
+				{ x: X, y: startY },
+				content.x
+			),
+			tspans
+		);
+	};
 
 	var LineAndScatterChart = function (_React$Component) {
 		_inherits(LineAndScatterChart, _React$Component);
@@ -965,6 +1039,7 @@
 		_createClass(LineAndScatterChart, [{
 			key: "render",
 			value: function render() {
+
 				// console.log('LineAndScatterChart render');
 				var _props = this.props,
 				    data = _props.data,
@@ -1022,9 +1097,9 @@
 						/**
 	      * Set the close for testing
 	      */
-						if (day.close === undefined) {
-							day.close = +data[name][i].close;
-						}
+						// if (day.close === undefined) {
+						// 	day.close = +data[name][i].close;
+						// }
 
 						/**
 	      * Set the date for the x axis ticks
@@ -1044,10 +1119,12 @@
 				/**
 	    * History lines
 	    */
+
 				var lines = keys.map(function (value, key) {
 					// console.log(value);
 					// console.log(key);
 					var color = colors.c[key];
+					lineColors[value] = color;
 					// console.log(color);
 					var line = _react2.default.createElement(LineSeries, {
 						key: key,
@@ -1087,7 +1164,7 @@
 						margin: { left: 15, right: 60, top: 20, bottom: 30 },
 						type: type,
 						pointsPerPxThreshold: 1,
-						seriesName: "MSFT",
+						seriesName: "STOCKS",
 						data: hist,
 						xAccessor: function xAccessor(d) {
 							return d.date;
@@ -1116,9 +1193,15 @@
 							at: "right",
 							orient: "right",
 							displayFormat: (0, _d3Format.format)(".2f") }),
-						lines,
-						scatters
+						lines
 					),
+					_react2.default.createElement(HoverTooltip, {
+						chartId: 1,
+						bgFill: "aliceblue",
+						stroke: 'solid',
+						bgOpacity: 0.2,
+						tooltipContent: tooltipContent(),
+						tooltipSVG: tooltipCustom }),
 					_react2.default.createElement(CrossHairCursor, null)
 				);
 			}
@@ -1163,6 +1246,8 @@
 			console.log("Right Click", e);
 		}
 	};
+
+	HoverTooltip.propTypes = {};
 
 	exports.default = LineAndScatterChart;
 
