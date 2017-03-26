@@ -357,7 +357,7 @@ class Main extends React.Component {
 
     return (
       <div className="container-fluid">
-        <div >
+        <div id='header' >
           <div className="row">
             <div className="col-sm-12">
               <h4>STOCKS</h4>
@@ -365,7 +365,7 @@ class Main extends React.Component {
           </div>
         </div>
         {chart}
-        <div>
+        <div id='stocks' >
           {quotes}
           <form>
             <input type="text" id="echo" placeholder="Enter a Stock Symbol" />
@@ -650,7 +650,7 @@ const FilterData = React.createClass({
     }
 
     return (
-      <div>
+      <div id='chart'>
         <div>
           {list}
           {dates}

@@ -9,6 +9,20 @@ body {
   background-color: lightgrey;
 }
 
+#header {
+  background-color: lightblue;
+}
+
+#chart {
+  background-color: aliceblue;
+  padding: 5px;
+}
+
+#stocks {
+  background-color: lightcyan;
+  padding: 5px;
+}
+
 form {
   padding-bottom: 5px;
 }
@@ -33,6 +47,10 @@ form {
 
 #credits {
   background-color: #D9EDF7;
+}
+
+.row {
+  text-align: center;
 }
 
 .container-fluid {

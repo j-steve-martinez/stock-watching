@@ -439,7 +439,7 @@
 	        { className: 'container-fluid' },
 	        React.createElement(
 	          'div',
-	          null,
+	          { id: 'header' },
 	          React.createElement(
 	            'div',
 	            { className: 'row' },
@@ -457,7 +457,7 @@
 	        chart,
 	        React.createElement(
 	          'div',
-	          null,
+	          { id: 'stocks' },
 	          quotes,
 	          React.createElement(
 	            'form',
@@ -773,7 +773,7 @@
 
 	    return React.createElement(
 	      'div',
-	      null,
+	      { id: 'chart' },
 	      React.createElement(
 	        'div',
 	        null,
