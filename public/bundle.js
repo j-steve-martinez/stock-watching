@@ -205,8 +205,8 @@
 	        // console.log(header);
 	        $.ajax(header).then(function (results) {
 
-	          console.log('Main getQuote done');
-	          console.log(results);
+	          // console.log('Main getQuote done');
+	          // console.log(results);
 	          if (results[0].symbol === null) {
 	            // console.log('Main getQuote null');
 	            /**
@@ -618,7 +618,10 @@
 	  },
 	  filter: function filter() {
 	    var filter = this.state.filter;
-	    if (filter === undefined || filter === 'YTD') {
+	    // console.log(typeof filter);
+	    // console.log(filter);
+	    if (filter === undefined || filter === '12') {
+	      // console.log('full data or unfiltered');
 	      var filtered = this.state.data;
 	    } else {
 	      // var arrLen = this.state.data.length;
@@ -645,9 +648,6 @@
 	        case '6':
 	          // console.log('six months');
 	          duration = day * 180;
-	          break;
-	        case 'YTD':
-	          // console.log('Year To Date');
 	          break;
 	        default:
 	          break;
@@ -677,13 +677,8 @@
 	      // console.log('new obj');
 	      // console.log(newObj);
 	      var filtered = [newObj];
-
-	      /**
-	       * Mock up until complete
-	       */
-	      // var filtered = this.state.data;
 	    }
-
+	    // console.log(filtered);
 	    return filtered;
 	  },
 	  render: function render() {
@@ -694,19 +689,14 @@
 	    // console.log(this.props);
 	    // console.log('state');
 	    // console.log(this.state);
-	    var labels = [1, 3, 6, 'YTD'],
+	    var labels = [1, 3, 6, 12],
 	        chart,
 	        list,
 	        dates,
 	        colors;
 
 	    list = labels.map(function (value, key) {
-	      var label;
-	      if (typeof value === 'number') {
-	        label = value + "M";
-	      } else {
-	        label = value;
-	      }
+	      var label = value + "M";
 
 	      return React.createElement(
 	        'button',
