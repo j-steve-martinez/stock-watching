@@ -331,15 +331,16 @@ class Main extends React.Component {
     // console.log('Main this.state');
     // console.log(this.state);
 
-    var quotes, stocks, chart, data = null;
+    var quotes, stocks, chart, colors, data = null;
 
     if (this.state === null || this.state.symbols.length === 0) {
       quotes = null;
       stocks = null;
     } else {
+      colors = getColors(this.state.symbols.length);
+      // console.log(colors);
       quotes = <GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />;
-      // stocks = <ListStocks symbols={this.state.symbols} cb={this.callBack} />;
-      stocks = <ListStocks stocks={this.state.full} cb={this.callBack} />;
+      stocks = <ListStocks stocks={this.state.full} colors={colors} hist={this.state.historical} cb={this.callBack} />;
     }
 
     if (this.state === null || this.state.historical.length === 0) {
@@ -352,7 +353,7 @@ class Main extends React.Component {
        *  so put the object into and array
        */
       data = [this.state.historical];
-      chart = <FilterData data={data} />
+      chart = <FilterData data={data} colors={colors} />
     }
 
     return (
@@ -391,21 +392,32 @@ const ListStocks = React.createClass({
   render() {
     // console.log('ListStocks');
     // console.log(this.props);
+    // console.log(Object.keys(this.props.hist).length);
     // var list = null;
-    var list = this.props.stocks.map((value, key) => {
-      return (
-        <button
-          onClick={this.handleClick}
-          id={value['symbol']}
-          key={key}
-          className="btn btn-info">
-          <span
-            className="glyphicon glyphicon-remove-sign"
-            aria-hidden="true">
-          </span> {value['symbol'] + ' : ' + value['name']}
-        </button>
-      )
-    });
+    if (Object.keys(this.props.hist).length === 0) {
+      var list = null;
+    } else {
+      var list = this.props.stocks.map((value, key) => {
+        // console.log(key);
+        // console.log('background-color:' + this.props.colors.c[key] + ';');
+        var color = this.props.colors.c[key];
+        var style = { 'backgroundColor': color }
+        // style="property:value;"
+        return (
+          <button
+            onClick={this.handleClick}
+            id={value['symbol']}
+            key={key}
+            style={style}
+            className="btn">
+            <span
+              className="glyphicon glyphicon-remove-sign"
+              aria-hidden="true">
+            </span> {value['symbol'] + ' : ' + value['name']}
+          </button>
+        )
+      });
+    }
 
     // console.log(list);
     return (
@@ -627,7 +639,8 @@ const FilterData = React.createClass({
       // console.log(endDate);
       // console.log(Object.keys(data[0]).length);
 
-      colors = getColors(Object.keys(data[0]).length);
+      // colors = getColors(Object.keys(data[0]).length);
+      colors = this.props.colors;
 
       dates = (
         <span className='dates'>

@@ -410,15 +410,17 @@
 	      var quotes,
 	          stocks,
 	          chart,
+	          colors,
 	          data = null;
 
 	      if (this.state === null || this.state.symbols.length === 0) {
 	        quotes = null;
 	        stocks = null;
 	      } else {
+	        colors = getColors(this.state.symbols.length);
+	        // console.log(colors);
 	        quotes = React.createElement(GetQuote, { symbols: this.state.symbols, symbol: this.state.symbol, cb: this.callBack });
-	        // stocks = <ListStocks symbols={this.state.symbols} cb={this.callBack} />;
-	        stocks = React.createElement(ListStocks, { stocks: this.state.full, cb: this.callBack });
+	        stocks = React.createElement(ListStocks, { stocks: this.state.full, colors: colors, hist: this.state.historical, cb: this.callBack });
 	      }
 
 	      if (this.state === null || this.state.historical.length === 0) {
@@ -431,7 +433,7 @@
 	         *  so put the object into and array
 	         */
 	        data = [this.state.historical];
-	        chart = React.createElement(FilterData, { data: data });
+	        chart = React.createElement(FilterData, { data: data, colors: colors });
 	      }
 
 	      return React.createElement(
@@ -494,22 +496,33 @@
 
 	    // console.log('ListStocks');
 	    // console.log(this.props);
+	    // console.log(Object.keys(this.props.hist).length);
 	    // var list = null;
-	    var list = this.props.stocks.map(function (value, key) {
-	      return React.createElement(
-	        'button',
-	        {
-	          onClick: _this4.handleClick,
-	          id: value['symbol'],
-	          key: key,
-	          className: 'btn btn-info' },
-	        React.createElement('span', {
-	          className: 'glyphicon glyphicon-remove-sign',
-	          'aria-hidden': 'true' }),
-	        ' ',
-	        value['symbol'] + ' : ' + value['name']
-	      );
-	    });
+	    if (Object.keys(this.props.hist).length === 0) {
+	      var list = null;
+	    } else {
+	      var list = this.props.stocks.map(function (value, key) {
+	        // console.log(key);
+	        // console.log('background-color:' + this.props.colors.c[key] + ';');
+	        var color = _this4.props.colors.c[key];
+	        var style = { 'backgroundColor': color };
+	        // style="property:value;"
+	        return React.createElement(
+	          'button',
+	          {
+	            onClick: _this4.handleClick,
+	            id: value['symbol'],
+	            key: key,
+	            style: style,
+	            className: 'btn' },
+	          React.createElement('span', {
+	            className: 'glyphicon glyphicon-remove-sign',
+	            'aria-hidden': 'true' }),
+	          ' ',
+	          value['symbol'] + ' : ' + value['name']
+	        );
+	      });
+	    }
 
 	    // console.log(list);
 	    return React.createElement(
@@ -739,7 +752,8 @@
 	      // console.log(endDate);
 	      // console.log(Object.keys(data[0]).length);
 
-	      colors = getColors(Object.keys(data[0]).length);
+	      // colors = getColors(Object.keys(data[0]).length);
+	      colors = this.props.colors;
 
 	      dates = React.createElement(
 	        'span',
