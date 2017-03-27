@@ -76,6 +76,9 @@
 	  // console.log('getting colors');
 	  var data = { c: [], bg: [] };
 	  var myColors = Please.make_color({
+	    value: .9,
+	    golden: true,
+	    full_random: false,
 	    format: 'rgb',
 	    colors_returned: num
 	  });
@@ -233,6 +236,9 @@
 	             */
 
 	            full.push(results[0]);
+	            // console.log(symbols);
+	            // console.log(symbol);
+	            // console.log(full);
 	            _this2.setState({ symbols: symbols, symbol: symbol, full: full });
 	          }
 	        });
@@ -275,6 +281,10 @@
 	        var fullname = full.filter(function (value) {
 	          return value['symbol'] !== symbol;
 	        });
+	        // console.log(newObj);
+	        // console.log(symbols);
+	        // console.log(symbol);
+	        // console.log(full);
 	        this.setState({ historical: newObj, symbols: symbols, symbol: '', full: fullname });
 	      }
 	    }
@@ -351,19 +361,25 @@
 	       */
 	      var primus = new Primus();
 	      primus.on('data', function (data) {
-	        // console.log('primus new data: ' + data.split(':')[1]);
+	        // console.log('primus new data: ' + data);
 	        var action = data.split(':')[0];
 	        var symbol = data.split(':')[1];
+	        var name = data.split(':')[2];
+
 	        // console.log(action);
 	        // console.log(symbol);
 	        var symbols = _this3.state.symbols;
+	        var full = _this3.state.full;
 	        if (symbols.indexOf(symbol) === -1) {
 	          // console.log('adding');
 	          // add
+	          full.push({ symbol: symbol, name: name });
 	          symbols.push(symbol);
-	          _this3.setState({ symbols: symbols, symbol: symbol });
+	          _this3.setState({ symbols: symbols, symbol: symbol, full: full });
 	        } else {
-	          // console.log('deleting');
+	          // console.log('primus deleting symbol');
+	          // console.log('state');
+	          // console.log(this.state);
 	          var historical = _this3.state.historical;
 	          // console.log(historical);
 	          // remove
@@ -371,12 +387,18 @@
 	            // console.log(value);
 	            return value !== symbol;
 	          });
-	          symbol = "";
 	          var newHist = {};
 	          symbols.forEach(function (value) {
 	            newHist[value] = historical[value];
 	          });
-	          _this3.setState({ symbols: symbols, symbol: symbol, historical: newHist });
+	          // console.log(symbol);
+	          full = full.filter(function (value) {
+	            // console.log(value.symbol);
+	            return value.symbol !== symbol;
+	          });
+	          // console.log(full);
+	          symbol = "";
+	          _this3.setState({ symbols: symbols, symbol: symbol, historical: newHist, full: full });
 	        }
 	      });
 
@@ -420,7 +442,7 @@
 	        colors = getColors(this.state.symbols.length);
 	        // console.log(colors);
 	        quotes = React.createElement(GetQuote, { symbols: this.state.symbols, symbol: this.state.symbol, cb: this.callBack });
-	        stocks = React.createElement(ListStocks, { stocks: this.state.full, colors: colors, hist: this.state.historical, cb: this.callBack });
+	        stocks = React.createElement(ListStocks, { stocks: this.state.full, symbols: this.state.symbols, colors: colors, hist: this.state.historical, cb: this.callBack });
 	      }
 
 	      if (this.state === null || this.state.historical.length === 0) {
@@ -498,31 +520,31 @@
 	    // console.log(this.props);
 	    // console.log(Object.keys(this.props.hist).length);
 	    // var list = null;
-	    // if (Object.keys(this.props.hist).length === 0) {
-	    //   var list = null;
-	    // } else {
-	    var list = this.props.stocks.map(function (value, key) {
-	      // console.log(key);
-	      // console.log('background-color:' + this.props.colors.c[key] + ';');
-	      var color = _this4.props.colors.c[key];
-	      var style = { 'backgroundColor': color };
-	      // style="property:value;"
-	      return React.createElement(
-	        'button',
-	        {
-	          onClick: _this4.handleClick,
-	          id: value['symbol'],
-	          key: key,
-	          style: style,
-	          className: 'btn' },
-	        React.createElement('span', {
-	          className: 'glyphicon glyphicon-remove-sign',
-	          'aria-hidden': 'true' }),
-	        ' ',
-	        value['symbol'] + ' : ' + value['name']
-	      );
-	    });
-	    // }
+	    if (Object.keys(this.props.hist).length === 0) {
+	      var list = null;
+	    } else {
+	      var list = this.props.stocks.map(function (value, key) {
+	        // console.log(key);
+	        // console.log('background-color:' + this.props.colors.c[key] + ';');
+	        var color = _this4.props.colors.c[key];
+	        var style = { 'backgroundColor': color };
+	        // style="property:value;"
+	        return React.createElement(
+	          'button',
+	          {
+	            onClick: _this4.handleClick,
+	            id: value['symbol'],
+	            key: key,
+	            style: style,
+	            className: 'btn' },
+	          React.createElement('span', {
+	            className: 'glyphicon glyphicon-remove-sign',
+	            'aria-hidden': 'true' }),
+	          ' ',
+	          value['symbol'] + ' : ' + value['name']
+	        );
+	      });
+	    }
 
 	    // console.log(list);
 	    return React.createElement(

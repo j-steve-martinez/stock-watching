@@ -16,6 +16,9 @@ function getColors(num) {
   // console.log('getting colors');
   var data = { c: [], bg: [] };
   var myColors = Please.make_color({
+    value: .9,
+    golden: true,
+    full_random: false,
     format: 'rgb',
     colors_returned: num
   });
@@ -160,6 +163,9 @@ class Main extends React.Component {
            */
 
           full.push(results[0]);
+          // console.log(symbols);
+          // console.log(symbol);
+          // console.log(full);
           this.setState({ symbols: symbols, symbol: symbol, full: full });
         }
 
@@ -206,6 +212,10 @@ class Main extends React.Component {
       var fullname = full.filter(value => {
         return value['symbol'] !== symbol;
       });
+      // console.log(newObj);
+      // console.log(symbols);
+      // console.log(symbol);
+      // console.log(full);
       this.setState({ historical: newObj, symbols: symbols, symbol: '', full: fullname })
     }
   }
@@ -274,19 +284,25 @@ class Main extends React.Component {
      */
     var primus = new Primus();
     primus.on('data', data => {
-      // console.log('primus new data: ' + data.split(':')[1]);
+      // console.log('primus new data: ' + data);
       var action = data.split(':')[0];
       var symbol = data.split(':')[1];
+      var name = data.split(':')[2];
+
       // console.log(action);
       // console.log(symbol);
       var symbols = this.state.symbols;
+      var full = this.state.full;
       if (symbols.indexOf(symbol) === -1) {
         // console.log('adding');
         // add
+        full.push({ symbol: symbol, name: name });
         symbols.push(symbol);
-        this.setState({ symbols: symbols, symbol: symbol });
+        this.setState({ symbols: symbols, symbol: symbol, full: full });
       } else {
-        // console.log('deleting');
+        // console.log('primus deleting symbol');
+        // console.log('state');
+        // console.log(this.state);
         var historical = this.state.historical;
         // console.log(historical);
         // remove
@@ -294,12 +310,18 @@ class Main extends React.Component {
           // console.log(value);
           return value !== symbol;
         });
-        symbol = "";
         var newHist = {};
         symbols.forEach(value => {
           newHist[value] = historical[value];
         });
-        this.setState({ symbols: symbols, symbol: symbol, historical: newHist });
+        // console.log(symbol);
+        full = full.filter(value => {
+          // console.log(value.symbol);
+          return value.symbol !== symbol;
+        });
+        // console.log(full);
+        symbol = "";
+        this.setState({ symbols: symbols, symbol: symbol, historical: newHist, full: full });
       }
 
     });
@@ -340,7 +362,7 @@ class Main extends React.Component {
       colors = getColors(this.state.symbols.length);
       // console.log(colors);
       quotes = <GetQuote symbols={this.state.symbols} symbol={this.state.symbol} cb={this.callBack} />;
-      stocks = <ListStocks stocks={this.state.full} colors={colors} hist={this.state.historical} cb={this.callBack} />;
+      stocks = <ListStocks stocks={this.state.full} symbols={this.state.symbols} colors={colors} hist={this.state.historical} cb={this.callBack} />;
     }
 
     if (this.state === null || this.state.historical.length === 0) {
@@ -394,9 +416,9 @@ const ListStocks = React.createClass({
     // console.log(this.props);
     // console.log(Object.keys(this.props.hist).length);
     // var list = null;
-    // if (Object.keys(this.props.hist).length === 0) {
-    //   var list = null;
-    // } else {
+    if (Object.keys(this.props.hist).length === 0) {
+      var list = null;
+    } else {
       var list = this.props.stocks.map((value, key) => {
         // console.log(key);
         // console.log('background-color:' + this.props.colors.c[key] + ';');
@@ -417,7 +439,7 @@ const ListStocks = React.createClass({
           </button>
         )
       });
-    // }
+    }
 
     // console.log(list);
     return (
