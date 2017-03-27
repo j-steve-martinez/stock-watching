@@ -394,9 +394,9 @@ const ListStocks = React.createClass({
     // console.log(this.props);
     // console.log(Object.keys(this.props.hist).length);
     // var list = null;
-    if (Object.keys(this.props.hist).length === 0) {
-      var list = null;
-    } else {
+    // if (Object.keys(this.props.hist).length === 0) {
+    //   var list = null;
+    // } else {
       var list = this.props.stocks.map((value, key) => {
         // console.log(key);
         // console.log('background-color:' + this.props.colors.c[key] + ';');
@@ -417,7 +417,7 @@ const ListStocks = React.createClass({
           </button>
         )
       });
-    }
+    // }
 
     // console.log(list);
     return (
@@ -644,8 +644,8 @@ const FilterData = React.createClass({
 
       dates = (
         <span className='dates'>
-          <button className="btn btn-xs btn-success">Start: {startDate}</button>
-          <button className="btn btn-xs btn-danger">End: {endDate}</button>
+          <div className="pull-left btn-xs btn-success date">Start: {startDate}</div>
+          <div className="pull-left btn-xs btn-danger date">End: {endDate}</div>
         </span>
       );
       // chart = <LineAndScatterChart data={data} type={type} ratio={ratio} width={width} />

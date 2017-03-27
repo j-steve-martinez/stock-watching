@@ -498,31 +498,31 @@
 	    // console.log(this.props);
 	    // console.log(Object.keys(this.props.hist).length);
 	    // var list = null;
-	    if (Object.keys(this.props.hist).length === 0) {
-	      var list = null;
-	    } else {
-	      var list = this.props.stocks.map(function (value, key) {
-	        // console.log(key);
-	        // console.log('background-color:' + this.props.colors.c[key] + ';');
-	        var color = _this4.props.colors.c[key];
-	        var style = { 'backgroundColor': color };
-	        // style="property:value;"
-	        return React.createElement(
-	          'button',
-	          {
-	            onClick: _this4.handleClick,
-	            id: value['symbol'],
-	            key: key,
-	            style: style,
-	            className: 'btn' },
-	          React.createElement('span', {
-	            className: 'glyphicon glyphicon-remove-sign',
-	            'aria-hidden': 'true' }),
-	          ' ',
-	          value['symbol'] + ' : ' + value['name']
-	        );
-	      });
-	    }
+	    // if (Object.keys(this.props.hist).length === 0) {
+	    //   var list = null;
+	    // } else {
+	    var list = this.props.stocks.map(function (value, key) {
+	      // console.log(key);
+	      // console.log('background-color:' + this.props.colors.c[key] + ';');
+	      var color = _this4.props.colors.c[key];
+	      var style = { 'backgroundColor': color };
+	      // style="property:value;"
+	      return React.createElement(
+	        'button',
+	        {
+	          onClick: _this4.handleClick,
+	          id: value['symbol'],
+	          key: key,
+	          style: style,
+	          className: 'btn' },
+	        React.createElement('span', {
+	          className: 'glyphicon glyphicon-remove-sign',
+	          'aria-hidden': 'true' }),
+	        ' ',
+	        value['symbol'] + ' : ' + value['name']
+	      );
+	    });
+	    // }
 
 	    // console.log(list);
 	    return React.createElement(
@@ -759,14 +759,14 @@
 	        'span',
 	        { className: 'dates' },
 	        React.createElement(
-	          'button',
-	          { className: 'btn btn-xs btn-success' },
+	          'div',
+	          { className: 'pull-left btn-xs btn-success date' },
 	          'Start: ',
 	          startDate
 	        ),
 	        React.createElement(
-	          'button',
-	          { className: 'btn btn-xs btn-danger' },
+	          'div',
+	          { className: 'pull-left btn-xs btn-danger date' },
 	          'End: ',
 	          endDate
 	        )
